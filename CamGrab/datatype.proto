@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+message ImageParameters {
+  bytes data = 1;      //图像
+  uint32 width = 2;    //宽度
+  uint32 height = 3;   //高度
+  string encoding = 4; //格式
+  int64 encoder_value = 5;//图像底部对应的编码器计数
+  int64 defect_encoder_value=6; //缺陷对应的编码器计数
+  string defect_type=7;  //图片的缺陷种类
+  int64 is_blow=8;  //图片所在段是否剔除
+  uint64 timestamp = 9;  //时间戳
+  string filename=10;  //图像文件名
+}

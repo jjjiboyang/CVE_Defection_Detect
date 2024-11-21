@@ -1,0 +1,232 @@
+import multiprocessing
+import time
+from datetime import datetime
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QSizePolicy, QButtonGroup, QSpacerItem
+from Display.GUI import Ui_MainWindow
+from Display.GraphicsView_One import CustomGraphicsView
+from Display.GraphicsView_Two import ImageListView
+from Display.ProductInfoLeft import ProductInfoWidgetLeft
+from Display.ProductInfoRight import ProductInfoWidgetRight
+from Display.StatusInfoLeft import StatusInfoWidgetLeft
+from Display.StatusInfoRight import StatusInfoWidgetRight
+from Display.sub_rec_image import EcalReceiverThread
+from Display.WindowTitle import ctQTitleBar
+from Display.StatusBar import StatusBar
+from Log.logger import logger_config
+from Display.CheckBox import CheckBox
+from multiprocessing import Process
+from EncoderIO.SignalGrab import run_SignalGrab
+from Algorithm.ProcessImage import run_ImageProcessing
+from Display.database_list import ImageDisplayWidget
+from Algorithm.SaveImage import SaveImage_ecal
+from Algorithm.blow_logic import blow
+from CamGrab.Camera1 import camera_grab_1
+from CamGrab.Camera2 import camera_grab_2
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        # 日志
+        self.logger = logger_config()
+        self.message_queue = multiprocessing.Queue()
+        self.light_queue = multiprocessing.Queue()
+        self.image_encoder_queue = multiprocessing.Queue()
+
+        # 启动采集图像的进程
+        try:
+            self.camera_grab_1 = Process(target=camera_grab_1)
+            self.camera_grab_2 = Process(target=camera_grab_2)
+            self.camera_grab_1.start()
+            self.camera_grab_2.start()
+        except Exception as e:
+            self.logger.error(e)
+
+        # 启动发送编码器和IO信号的进程
+        self.light_queue.put("ready")
+        try:
+            self.process_signal = Process(target=run_SignalGrab)
+            self.process_signal.start()
+        except Exception as e:
+            self.logger.error(e)
+
+        # 初始化
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.status = False
+        self.save_choice = 1
+
+        '''隐藏系统标题栏并且自己设置'''
+        # 创建标题栏
+        self.title = ctQTitleBar(self)
+        # 设置标题栏图标
+        self.title.f_setIcon(QPixmap(":title_icon/icon/薄膜瑕疵检测.png"))
+        # 隐藏主窗口边框
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        # 新建布局
+        self.mainLayout = QVBoxLayout()
+        self.mainLayout.setContentsMargins(0, 0, 0, 0)  # 去除边距
+        self.mainLayout.setSpacing(0)  # 去除控件间距
+        # 将标题栏添加到主布局中
+        self.mainLayout.addWidget(self.title)
+        # 现有的布局
+        self.existingLayout = QVBoxLayout()
+        self.existingLayout.addWidget(self.ui.menubar)
+        self.ui.menubar.setStyleSheet("background-color:#232629;")
+        self.existingLayout.addWidget(self.ui.centralwidget)
+        self.ui.centralwidget.setStyleSheet("background-color: #4F5B62;")
+        # 创建一个新的中央小部件，并设置布局
+        central_widget = QWidget()
+        central_widget.setStyleSheet("background-color: #232629;")
+        central_widget.setLayout(self.mainLayout)
+        central_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.setCentralWidget(central_widget)
+        # 添加现有布局到新的中央小部件
+        self.mainLayout.addLayout(self.existingLayout)
+        self.ui.menubar.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+
+        '''字体大小'''
+        self.ui.label_1.setStyleSheet("font-size: 20px;font-weight: bold;color:White;")
+        self.ui.label_2.setStyleSheet("font-size: 20px;font-weight: bold;color:White;")
+        self.ui.label_3.setStyleSheet("font-size: 20px;font-weight: bold;color:White;")
+        self.ui.Start_Button.setStyleSheet("font-size: 20px;font-weight: bold;")
+        self.ui.Stop_Button.setStyleSheet("font-size: 20px;font-weight: bold;")
+
+        '''第一个GraphicView'''
+        self.ui.graphicsView_1.deleteLater()
+        self.ui.graphicsView_1 = CustomGraphicsView(self.ui.widget_1)
+        self.ui.graphicsView_1.setObjectName(u"graphicsView_1")
+        # 添加布局
+        self.ui.gridLayout_6.addWidget(self.ui.graphicsView_1, 1, 0, 1, 1)
+
+        '''第二个GraphicView'''
+        self.ui.graphicsView_2.deleteLater()
+        self.ui.graphicsView_2 = CustomGraphicsView(self.ui.widget_1)
+        self.ui.graphicsView_2.setObjectName(u"graphicsView_2")
+        # 添加布局
+        self.ui.gridLayout_6.addWidget(self.ui.graphicsView_2, 1, 1, 1, 1)
+
+        '''第三个GraphicView'''
+        # 获取当前日期并格式化
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        self.ui.graphicsView_3.deleteLater()
+        self.ui.graphicsView_3 = ImageListView(f"./All_Images/{current_date}", self.ui.widget_1)
+        self.ui.graphicsView_3.setObjectName(u"graphicsView_3")
+        self.ui.graphicsView_3.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        # 添加布局
+        self.ui.gridLayout_6.addWidget(self.ui.graphicsView_3, 1, 2, 1, 1)
+
+        '''生产信息'''
+        self.product_info_widget_1 = ProductInfoWidgetLeft(self.ui.graphicsView_3)
+        self.product_info_widget_2 = ProductInfoWidgetRight(self.ui.graphicsView_3)
+        self.ui.verticalLayout_2.addWidget(self.product_info_widget_1)
+        self.ui.verticalLayout.addWidget(self.product_info_widget_2)
+
+        '''运行状态'''
+        self.status_widget_1 = StatusInfoWidgetLeft()
+        self.status_widget_2 = StatusInfoWidgetRight()
+        self.ui.verticalLayout_3.addWidget(self.status_widget_1)
+        self.ui.verticalLayout_4.addWidget(self.status_widget_2)
+
+        '''绑定按钮'''
+        self.ui.Start_Button.clicked.connect(self.product_info_widget_2.start_running)
+        self.ui.Stop_Button.clicked.connect(self.product_info_widget_2.stop_running)
+        self.ui.Start_Button.clicked.connect(self.status_widget_1.start_timing)
+        self.ui.Stop_Button.clicked.connect(self.status_widget_1.stop_timing)
+        self.ui.Start_Button.clicked.connect(self.start_button_clicked)
+        self.ui.Stop_Button.clicked.connect(self.stop_button_clicked)
+
+        '''展示'''
+        self.ecal_receiver_thread = EcalReceiverThread()
+        self.ecal_receiver_thread.image_received_1.connect(self.update_graphics_view_1)
+        self.ecal_receiver_thread.image_received_2.connect(self.update_graphics_view_2)
+        self.ecal_receiver_thread.start()
+
+        '''CheckBox'''
+        self.cBox = CheckBox(self.ui, self.light_queue)
+        self.ui.checkBox_5.stateChanged.connect(self.cBox.on_checkbox5_changed)
+        self.ui.checkBox_6.stateChanged.connect(self.cBox.on_checkbox6_changed)
+        self.ui.checkBox_4.stateChanged.connect(self.save_image_choice)
+
+        '''StatusBar'''
+        self.status_text = StatusBar(self.ui)
+
+        '''数据库'''
+        self.image_display_widget = ImageDisplayWidget(self.ui, self.message_queue)
+        self.ui.listWidget.setStyleSheet("""
+            QListWidget::item {
+                border-bottom: 2px solid #31363B;  /* 设置分割线 */
+            }
+
+            QListWidget {
+                font-size: 15px;  /* 设置字体大小 */
+                font-family: Arial;  /* 设置字体类型 */}
+        """)
+
+    def save_image_choice(self):
+        if self.ui.checkBox_4.isChecked():
+            self.save_choice = 1
+        else:
+            self.save_choice = 0
+
+    def update_statusbar(self, message):
+        self.status_text.show(message)
+
+    def start_button_clicked(self):
+        if not self.status:
+            self.ecal_receiver_thread.start_receive()
+            self.process_image = Process(target=run_ImageProcessing,
+                                         args=(self.save_choice, self.light_queue, self.image_encoder_queue))
+            self.process_image.start()
+            self.save_image = Process(target=SaveImage_ecal, args=(self.save_choice, self.message_queue))
+            self.save_image.start()
+            self.blow_logic = Process(target=blow, args=(self.image_encoder_queue, self.light_queue))
+            self.blow_logic.start()
+            self.status = True
+            self.light_queue.put("run")
+            self.status_text.show("开始接收图片")
+        else:
+            self.status_text.show("已在接收图片")
+            self.logger.info("Receiver is already running.")
+
+    def update_graphics_view_1(self, img):
+        self.ui.graphicsView_1.set_image(img)
+        self.status_widget_2.update_1()
+
+    def update_graphics_view_2(self, img):
+        self.ui.graphicsView_2.set_image(img)
+        self.status_widget_2.update_2()
+
+    def stop_button_clicked(self):
+        if self.status:
+            self.ecal_receiver_thread.stop_receive()
+            self.process_image.terminate()
+            self.save_image.terminate()
+            self.blow_logic.terminate()
+            self.status = False
+            self.light_queue.put("stop")
+            self.status_text.show("停止接收图片")
+        else:
+            self.status_text.show("已停止接收图片")
+            self.logger.info("Receiver is already stopped.")
+
+    def closeEvent(self, event):
+        self.light_queue.put("close")
+        self.product_info_widget_2.stop_running()
+        self.status_widget_2.close_window()
+        self.stop_button_clicked()
+        self.ecal_receiver_thread.terminate()
+        self.process_signal.terminate()
+        # 关闭采集图像的进程
+        self.camera_grab_1.terminate()
+        self.camera_grab_2.terminate()
+        event.accept()  # 接受关闭事件
+        QApplication.quit()  # 结束主事件循环并退出程序
+
+        # 额外的检查：确保所有线程都被终止
+        # for thread in threading.enumerate():
+        #     if thread is not threading.main_thread():
+        #         self.logger.info(f"Joining thread: {thread.name}")
+        #         thread.join(timeout=1)

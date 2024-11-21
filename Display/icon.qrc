@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="title_icon">
+    <file>icon/停止运行.png</file>
+    <file>icon/正在运行.png</file>
+    <file>icon/窗口最大化.png</file>
+    <file>icon/窗口最小化.png</file>
+    <file>icon/窗口-最小化_line.png</file>
+    <file>icon/关闭窗口.png</file>
+    <file>icon/薄膜瑕疵检测.png</file>
+  </qresource>
+</RCC>
