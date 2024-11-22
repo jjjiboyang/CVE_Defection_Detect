@@ -15555,3 +15555,20 @@ der'
 2024-11-22 11:20:00,207 - root - INFO - Receiver is already stopped.
 2024-11-22 11:20:39,524 - root - INFO - open device successfully 1
 2024-11-22 11:20:39,527 - root - INFO - open device successfully 2
+2024-11-22 14:31:20,550 - root - INFO - open device successfully 2
+2024-11-22 14:31:20,552 - root - INFO - open device successfully 1
+2024-11-22 14:31:23,280 - root - INFO - Receiver is already stopped.
+2024-11-22 14:31:23,280 - root - INFO - Receiver is already stopped.
+2024-11-22 14:31:23,280 - root - INFO - Receiver is already stopped.
+2024-11-22 14:31:23,280 - root - INFO - Receiver is already stopped.
+2024-11-22 14:31:23,280 - root - INFO - Receiver is already stopped.
+2024-11-22 14:31:23,280 - root - INFO - Receiver is already stopped.
+2024-11-22 14:31:34,899 - root - INFO - open device successfully 2
+2024-11-22 14:31:34,903 - root - INFO - open device successfully 1
+2024-11-22 14:44:06,393 - root - ERROR - error SignalLight long
+2024-11-22 18:10:12,560 - root - INFO - Receiver is already stopped.
+2024-11-22 18:10:12,560 - root - INFO - Receiver is already stopped.
+2024-11-22 18:10:12,560 - root - INFO - Receiver is already stopped.
+2024-11-22 18:10:12,560 - root - INFO - Receiver is already stopped.
+2024-11-22 18:10:12,560 - root - INFO - Receiver is already stopped.
+2024-11-22 18:10:12,560 - root - INFO - Receiver is already stopped.
