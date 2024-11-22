@@ -116,7 +116,7 @@ class Detect:
                     # 保存图像
                     output_path = f'./All_Images/out_long/{filename}_{K}.png'
                     ha.write_image(ImageSave, 'png', 0, output_path)
-                    pass
+                    break
                 else:
                     output_path = f'./All_Images/out_water/{filename}_{K}.png'
                     ha.write_image(ImageSave, 'png', 0, output_path)
@@ -155,7 +155,7 @@ class Detect:
                     # 保存图像
                     output_path = f'./All_Images/out_jingyuan/{filename}_{K}.png'
                     ha.write_image(ImageSave, 'png', 0, output_path)
-                    pass
+                    break
                 else:
                     output_path = f'./All_Images/out_water/{filename}_{K}.png'
                     ha.write_image(ImageSave, 'png', 0, output_path)
@@ -197,7 +197,7 @@ class Detect:
                         # 保存图像
                         output_path = f'./All_Images/out_black/{filename}_{K}.png'
                         ha.write_image(ImageSave, 'png', 0, output_path)
-                        pass
+                        break
                     else:
                         output_path = f'./All_Images/out_noblack/{filename}_{K}.png'
                         ha.write_image(ImageSave, 'png', 0, output_path)
@@ -213,6 +213,7 @@ class Detect:
 
 
         if sum4 >= 4:
+            count=0
             Region4 = ha.select_obj(ConnectedRegions, class4_index)
             # 找到最小外接矩形
             Row1, Column1, Row2, Column2 = ha.smallest_rectangle1(Region4)
@@ -238,10 +239,13 @@ class Detect:
                 DLResult = ha.apply_dl_model(self.DLModelHandle_water, [self.DLSample], [])
                 ImageClass = ha.get_dict_tuple(DLResult[0], 'classification_class_ids')
                 if not ImageClass[0]:
+                    count+=1
+                    if count>3:
+                        break
                     # 保存图像
                     output_path = f'./All_Images/out_continue/{filename}_{K}.png'
                     ha.write_image(ImageSave, 'png', 0, output_path)
-                    pass
+
                 else:
                     output_path = f'./All_Images/out_water/{filename}_{K}.png'
                     ha.write_image(ImageSave, 'png', 0, output_path)
@@ -285,7 +289,7 @@ class ProcessImage:
         while ecal_core.ok():
             if count == 100:
                 count = 0
-                print("size:",self.img_queue.qsize())
+                # print("size:",self.img_queue.qsize())
             if not self.img_queue.empty():
                 start_t = time.time()
                 data = self.img_queue.get()
