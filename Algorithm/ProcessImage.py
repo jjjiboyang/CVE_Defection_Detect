@@ -44,18 +44,33 @@ class Detect:
 
         # 定义规则类别
         # 长条划痕
-        class1=ha.tuple_greater_elem(Area,400) and (ha.tuple_greater_elem(Height,300) and ha.tuple_greater_elem(2000,Height)) and ha.tuple_greater_elem(10,Deviation)
-        # 晶圆
-        class2=(ha.tuple_greater_elem(Area,600) and ha.tuple_greater_elem(3000,Area)) and (ha.tuple_greater_elem(gray_max,200) and ha.tuple_greater_elem(gray_mean,150)) and ha.tuple_greater_elem(100,Height)
-        # 糊料
-        class3=(ha.tuple_greater_elem(Area,50) and ha.tuple_greater_elem(3000,Area)) and (ha.tuple_greater_elem(95,gray_min) and ha.tuple_greater_elem(150,gray_mean)) and ha.tuple_greater_elem(100,Height)
-        # 连续晶圆和塑化不良
-        class4=(ha.tuple_greater_elem(Area,250) and ha.tuple_greater_elem(600,Area)) and ha.tuple_greater_elem(100,Height)
+        a=ha.tuple_greater_elem(Area,400)
+        b=ha.tuple_greater_elem(Height,300)
+        c=ha.tuple_greater_elem(2000,Height)
+        d=ha.tuple_greater_elem(10,Deviation)
+        class1 = list(map(lambda x, y, z, w: x & y & z & w, a, b, c, d))
 
-        print(class1)
-        print(class2)
-        print(class3)
-        print(class4)
+        # 晶圆
+        a=ha.tuple_greater_elem(Area,600)
+        b=ha.tuple_greater_elem(3000,Area)
+        c=ha.tuple_greater_elem(gray_max,200)
+        d=ha.tuple_greater_elem(gray_mean,150)
+        e=ha.tuple_greater_elem(100,Height)
+        class2=list(map(lambda x, y, z, w, t : x & y & z & w & t, a, b, c, d,e))
+
+        # 糊料
+        a=ha.tuple_greater_elem(Area,50)
+        b=ha.tuple_greater_elem(3000,Area)
+        c=ha.tuple_greater_elem(95,gray_min)
+        d=ha.tuple_greater_elem(150,gray_mean)
+        e=ha.tuple_greater_elem(100, Height)
+        class3 = list(map(lambda x, y, z, w, t: x & y & z & w & t, a, b, c, d, e))
+
+        # 连续晶圆和塑化不良
+        a=ha.tuple_greater_elem(Area,250)
+        b=ha.tuple_greater_elem(600,Area)
+        c=ha.tuple_greater_elem(100,Height)
+        class4 = list(map(lambda x, y, z: x & y & z, a, b, c))
 
         sum1=ha.tuple_sum(class1)[0]
         sum2=ha.tuple_sum(class2)[0]
@@ -150,96 +165,96 @@ class Detect:
             if sum2>0:
                 result+="2"
 
-            if sum3 > 0:
-                Region3 = ha.select_obj(ConnectedRegions, class3_index)
-                # 找到最小外接矩形
-                Row1, Column1, Row2, Column2 = ha.smallest_rectangle1(Region3)
-                # 创建矩形区域
-                Rectangle = ha.gen_rectangle1(Row1, Column1, Row2, Column2)
-                # 膨胀矩形区域
-                RegionDilation = ha.dilation_rectangle1(Rectangle, 32, 32)
-                # 重新计算最小外接矩形
-                Row11, Column11, Row21, Column21 = ha.smallest_rectangle1(RegionDilation)
-                # 裁剪图像
-                ImageCrop = ha.crop_rectangle1(Image, Row11, Column11, Row21, Column21)
+        if sum3 > 0:
+            Region3 = ha.select_obj(ConnectedRegions, class3_index)
+            # 找到最小外接矩形
+            Row1, Column1, Row2, Column2 = ha.smallest_rectangle1(Region3)
+            # 创建矩形区域
+            Rectangle = ha.gen_rectangle1(Row1, Column1, Row2, Column2)
+            # 膨胀矩形区域
+            RegionDilation = ha.dilation_rectangle1(Rectangle, 32, 32)
+            # 重新计算最小外接矩形
+            Row11, Column11, Row21, Column21 = ha.smallest_rectangle1(RegionDilation)
+            # 裁剪图像
+            ImageCrop = ha.crop_rectangle1(Image, Row11, Column11, Row21, Column21)
 
-                # 判断有无水珠
-                ImageConverted = ha.convert_image_type(ImageCrop, 'real')
-                ImageZoom = ha.zoom_image_size(ImageConverted, 40, 100, 'constant')
+            # 判断有无水珠
+            ImageConverted = ha.convert_image_type(ImageCrop, 'real')
+            ImageZoom = ha.zoom_image_size(ImageConverted, 40, 100, 'constant')
 
-                for K in range(1, sum3 + 1):
-                    # 选择对象
-                    ImageSingle = ha.select_obj(ImageZoom, K)
-                    ImageSave = ha.select_obj(ImageCrop, K)
-                    ha.set_dict_object(ImageSingle, self.DLSample, 'image')
-                    # 对处理后的样本字典送进模型进行推理，得到推理结果
-                    DLResult = ha.apply_dl_model(self.DLModelHandle_water, [self.DLSample], [])
-                    ImageClass = ha.get_dict_tuple(DLResult[0], 'classification_class_ids')
-                    if not ImageClass[0]:
-                        ha.set_dict_object(ImageSingle, self.DLSample_black, 'image')
-                        DLResult_black = ha.apply_dl_model(self.DLModelHandle_black, [self.DLSample_black], [])
-                        ImageClass_black = ha.get_dict_tuple(DLResult_black[0], 'classification_class_ids')
-                        if not ImageClass_black[0]:
-                            # 保存图像
-                            output_path = f'./All_Images/out_black/{filename}_{K}.png'
-                            ha.write_image(ImageSave, 'png', 0, output_path)
-                            pass
-                        else:
-                            output_path = f'./All_Images/out_noblack/{filename}_{K}.png'
-                            ha.write_image(ImageSave, 'png', 0, output_path)
-                            sum3 -= 1
-                    else:
-                        output_path = f'./All_Images/out_water/{filename}_{K}.png'
-                        ha.write_image(ImageSave, 'png', 0, output_path)
-                        sum3 -= 1
-
-                if sum3>0:
-                    result+="3"
-
-
-
-            if sum4 > 4:
-                Region4 = ha.select_obj(ConnectedRegions, class4_index)
-                # 找到最小外接矩形
-                Row1, Column1, Row2, Column2 = ha.smallest_rectangle1(Region4)
-                # 创建矩形区域
-                Rectangle = ha.gen_rectangle1(Row1, Column1, Row2, Column2)
-                # 膨胀矩形区域
-                RegionDilation = ha.dilation_rectangle1(Rectangle, 32, 32)
-                # 重新计算最小外接矩形
-                Row11, Column11, Row21, Column21 = ha.smallest_rectangle1(RegionDilation)
-                # 裁剪图像
-                ImageCrop = ha.crop_rectangle1(Image, Row11, Column11, Row21, Column21)
-
-                # 判断有无水珠
-                ImageConverted = ha.convert_image_type(ImageCrop, 'real')
-                ImageZoom = ha.zoom_image_size(ImageConverted, 40, 100, 'constant')
-
-                for K in range(1, sum4 + 1):
-                    # 选择对象
-                    ImageSingle = ha.select_obj(ImageZoom, K)
-                    ImageSave = ha.select_obj(ImageCrop, K)
-                    ha.set_dict_object(ImageSingle, self.DLSample, 'image')
-                    # 对处理后的样本字典送进模型进行推理，得到推理结果
-                    DLResult = ha.apply_dl_model(self.DLModelHandle_water, [self.DLSample], [])
-                    ImageClass = ha.get_dict_tuple(DLResult[0], 'classification_class_ids')
-                    if not ImageClass[0]:
+            for K in range(1, sum3 + 1):
+                # 选择对象
+                ImageSingle = ha.select_obj(ImageZoom, K)
+                ImageSave = ha.select_obj(ImageCrop, K)
+                ha.set_dict_object(ImageSingle, self.DLSample, 'image')
+                # 对处理后的样本字典送进模型进行推理，得到推理结果
+                DLResult = ha.apply_dl_model(self.DLModelHandle_water, [self.DLSample], [])
+                ImageClass = ha.get_dict_tuple(DLResult[0], 'classification_class_ids')
+                if not ImageClass[0]:
+                    ha.set_dict_object(ImageSingle, self.DLSample_black, 'image')
+                    DLResult_black = ha.apply_dl_model(self.DLModelHandle_black, [self.DLSample_black], [])
+                    ImageClass_black = ha.get_dict_tuple(DLResult_black[0], 'classification_class_ids')
+                    if not ImageClass_black[0]:
                         # 保存图像
-                        output_path = f'./All_Images/out_continue/{filename}_{K}.png'
+                        output_path = f'./All_Images/out_black/{filename}_{K}.png'
                         ha.write_image(ImageSave, 'png', 0, output_path)
                         pass
                     else:
-                        output_path = f'./All_Images/out_water/{filename}_{K}.png'
+                        output_path = f'./All_Images/out_noblack/{filename}_{K}.png'
                         ha.write_image(ImageSave, 'png', 0, output_path)
-                        sum4 -= 1
+                        sum3 -= 1
+                else:
+                    output_path = f'./All_Images/out_water/{filename}_{K}.png'
+                    ha.write_image(ImageSave, 'png', 0, output_path)
+                    sum3 -= 1
 
-                if sum4>5:
-                    result+="4"
+            if sum3>0:
+                result+="3"
 
-            if result=="":
-                return "0"
 
-            return result
+
+        if sum4 > 4:
+            Region4 = ha.select_obj(ConnectedRegions, class4_index)
+            # 找到最小外接矩形
+            Row1, Column1, Row2, Column2 = ha.smallest_rectangle1(Region4)
+            # 创建矩形区域
+            Rectangle = ha.gen_rectangle1(Row1, Column1, Row2, Column2)
+            # 膨胀矩形区域
+            RegionDilation = ha.dilation_rectangle1(Rectangle, 32, 32)
+            # 重新计算最小外接矩形
+            Row11, Column11, Row21, Column21 = ha.smallest_rectangle1(RegionDilation)
+            # 裁剪图像
+            ImageCrop = ha.crop_rectangle1(Image, Row11, Column11, Row21, Column21)
+
+            # 判断有无水珠
+            ImageConverted = ha.convert_image_type(ImageCrop, 'real')
+            ImageZoom = ha.zoom_image_size(ImageConverted, 40, 100, 'constant')
+
+            for K in range(1, sum4 + 1):
+                # 选择对象
+                ImageSingle = ha.select_obj(ImageZoom, K)
+                ImageSave = ha.select_obj(ImageCrop, K)
+                ha.set_dict_object(ImageSingle, self.DLSample, 'image')
+                # 对处理后的样本字典送进模型进行推理，得到推理结果
+                DLResult = ha.apply_dl_model(self.DLModelHandle_water, [self.DLSample], [])
+                ImageClass = ha.get_dict_tuple(DLResult[0], 'classification_class_ids')
+                if not ImageClass[0]:
+                    # 保存图像
+                    output_path = f'./All_Images/out_continue/{filename}_{K}.png'
+                    ha.write_image(ImageSave, 'png', 0, output_path)
+                    pass
+                else:
+                    output_path = f'./All_Images/out_water/{filename}_{K}.png'
+                    ha.write_image(ImageSave, 'png', 0, output_path)
+                    sum4 -= 1
+
+            if sum4>5:
+                result+="4"
+
+        if result=="":
+            return "0"
+
+        return result
 
 
 class ProcessImage:
@@ -274,7 +289,6 @@ class ProcessImage:
                 count = 0
                 # print("size:",self.img_queue.qsize())
             if not self.img_queue.empty():
-                print(111)
                 start_t = time.time()
                 data = self.img_queue.get()
                 image_msg = data[0]
@@ -294,7 +308,7 @@ class ProcessImage:
                     last_cam2_encoder_value = image_msg.encoder_value
                     continue
                 defect_num = self.Detect.detect(halcon_image, image_msg.encoder_value)
-                if defect_num[0]!="0":
+                if defect_num!="0":
                     if self.cam_num == 1:
                         self.image_encoder_queue.put(last_cam1_encoder_value)
                     elif self.cam_num == 2:
