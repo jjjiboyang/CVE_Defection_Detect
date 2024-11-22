@@ -122,16 +122,16 @@ class ProductInfoWidgetRight(QWidget):
 
     def update_counts(self, defect_type):
         for i in range(len(defect_type)):
-            if defect_type[i] == 1:
+            if defect_type[i] == "1":
                 self.defects_type1_count += 1
                 self.defects_type1_label.setText(f"长条划痕缺陷数量: {self.defects_type1_count}")
-            elif defect_type[i] == 2:
+            elif defect_type[i] == "2":
                 self.defects_type2_count += 1
                 self.defects_type2_label.setText(f"晶圆水斑缺陷数量: {self.defects_type2_count}")
-            elif defect_type[i] == 3:
+            elif defect_type[i] == "3":
                 self.defects_type3_count += 1
                 self.defects_type3_label.setText(f"糊料黑点缺陷数量: {self.defects_type3_count}")
-            elif defect_type[i] == 4:
+            elif defect_type[i] == "4":
                 self.defects_type4_count += 1
                 self.defects_type4_label.setText(f"连续晶圆缺陷数量: {self.defects_type4_count}")
 

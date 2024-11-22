@@ -13,17 +13,17 @@ import time
 class Detect:
     def __init__(self):
         # 读取神经网络模型
-        self.DLModelHandle_water = ha.read_dl_model('./Model/model_water.hdl')
-        self.DLModelHandle_black = ha.read_dl_model('./Model/model_black.hdl')
+        self.DLModelHandle_water = ha.read_dl_model('./Algorithm/Model/model_water.hdl')
+        self.DLModelHandle_black = ha.read_dl_model('./Algorithm/Model/model_black.hdl')
         # 设置模型参数
-        ha.set_dl_model_param(self.DLModelHandle_water, 'runtime', 'cpu')
-        ha.set_dl_model_param(self.DLModelHandle_black, 'runtime', 'cpu')
+        ha.set_dl_model_param(self.DLModelHandle_water, 'runtime', 'gpu')
+        ha.set_dl_model_param(self.DLModelHandle_black, 'runtime', 'gpu')
         # 生成一个样本字典
         self.DLSample = ha.create_dict()
         self.DLSample_black= ha.create_dict()
 
     def detect(self, Image, filename):
-        result=[]
+        result=""
         ImageScaled=ha.scale_image(Image,1.5,-50)
         ImageMedian = ha.median_image(ImageScaled, 'circle', 2, 'mirrored')
         # 计算偏差图
@@ -40,7 +40,7 @@ class Detect:
         Length=ha.tuple_length(Area)
 
         if Length<=4:
-            return [0]
+            return "0"
 
         # 定义规则类别
         # 长条划痕
@@ -104,7 +104,7 @@ class Detect:
                     sum1 -= 1
 
             if sum1>0:
-                result.append(sum1)
+                result+="1"
 
 
         if sum2>0:
@@ -143,7 +143,7 @@ class Detect:
                     sum2 -= 1
 
             if sum2>0:
-                result.append(sum2)
+                result+="2"
 
             if sum3 > 0:
                 Region3 = ha.select_obj(ConnectedRegions, class3_index)
@@ -189,7 +189,7 @@ class Detect:
                         sum3 -= 1
 
                 if sum3>0:
-                    result.append(sum3)
+                    result+="3"
 
 
 
@@ -229,10 +229,10 @@ class Detect:
                         sum4 -= 1
 
                 if sum4>5:
-                    result.append(sum4)
+                    result+="4"
 
-            if result==[]:
-                return result[0]
+            if result=="":
+                return "0"
 
             return result
 
@@ -269,6 +269,7 @@ class ProcessImage:
                 count = 0
                 # print("size:",self.img_queue.qsize())
             if not self.img_queue.empty():
+                print(111)
                 start_t = time.time()
                 data = self.img_queue.get()
                 image_msg = data[0]
@@ -288,13 +289,13 @@ class ProcessImage:
                     last_cam2_encoder_value = image_msg.encoder_value
                     continue
                 defect_num = self.Detect.detect(halcon_image, image_msg.encoder_value)
-                if defect_num[0]:
+                if defect_num[0]!="0":
                     if self.cam_num == 1:
                         self.image_encoder_queue.put(last_cam1_encoder_value)
                     elif self.cam_num == 2:
                         self.image_encoder_queue.put(last_cam2_encoder_value)
                     self.image_encoder_queue.put(image_msg.encoder_value)
-                    image_msg.defect_type = defect_num.join("")
+                    image_msg.defect_type = defect_num
                     image_msg.is_blow = 1
 
                     serialized_message = image_msg.SerializeToString()

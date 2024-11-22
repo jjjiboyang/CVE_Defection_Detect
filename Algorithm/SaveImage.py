@@ -29,7 +29,7 @@ class SaveImages:
                 img_msg = self.images_queue.get()
                 np_arr = np.frombuffer(img_msg.data, np.uint8)
                 img = cv2.imdecode(np_arr, cv2.IMREAD_GRAYSCALE)
-                if img_msg.defect_count != 0:
+                if img_msg.defect_type != "0":
                     self.save_images_folder(img, img_msg.filename)
                 self.save_images_database(img_msg.data, img_msg.timestamp)
 
