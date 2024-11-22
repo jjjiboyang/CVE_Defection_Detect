@@ -5,7 +5,6 @@ import numpy as np
 import CamGrab.datatype_pb2 as datatype_pb2
 import ecal.core.core as ecal_core
 import sys
-from Log.logger import logger_config
 import halcon as ha
 import time
 
@@ -248,13 +247,17 @@ class Detect:
                     ha.write_image(ImageSave, 'png', 0, output_path)
                     sum4 -= 1
 
-            if sum4>3:
-                result+="4"
+            if sum4 > 3:
+                result += "4"
 
-        if result=="":
+        if result == "":
             return "0"
 
         print(result)
+        print(class1)
+        print(class2)
+        print(class3)
+        print(class4)
         return result
 
 
