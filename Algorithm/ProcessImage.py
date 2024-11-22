@@ -213,7 +213,7 @@ class Detect:
 
 
 
-        if sum4 > 4:
+        if sum4 >= 4:
             Region4 = ha.select_obj(ConnectedRegions, class4_index)
             # 找到最小外接矩形
             Row1, Column1, Row2, Column2 = ha.smallest_rectangle1(Region4)
@@ -248,12 +248,13 @@ class Detect:
                     ha.write_image(ImageSave, 'png', 0, output_path)
                     sum4 -= 1
 
-            if sum4>5:
+            if sum4>3:
                 result+="4"
 
         if result=="":
             return "0"
 
+        print(result)
         return result
 
 
@@ -280,14 +281,13 @@ class ProcessImage:
     def detect_defects(self):
         ecal_core.initialize(sys.argv, "Processed Image Publisher")
         pub = ecal_core.publisher('ProcessedImage')
-        logger = logger_config()
         last_cam1_encoder_value = 0
         last_cam2_encoder_value = 0
         count = 0
         while ecal_core.ok():
             if count == 100:
                 count = 0
-                # print("size:",self.img_queue.qsize())
+                print("size:",self.img_queue.qsize())
             if not self.img_queue.empty():
                 start_t = time.time()
                 data = self.img_queue.get()
@@ -308,7 +308,7 @@ class ProcessImage:
                     last_cam2_encoder_value = image_msg.encoder_value
                     continue
                 defect_num = self.Detect.detect(halcon_image, image_msg.encoder_value)
-                if defect_num!="0":
+                if defect_num != "0":
                     if self.cam_num == 1:
                         self.image_encoder_queue.put(last_cam1_encoder_value)
                     elif self.cam_num == 2:
@@ -331,7 +331,7 @@ class ProcessImage:
                     last_cam2_encoder_value = image_msg.encoder_value
 
                 end_t = time.time()
-                print("total:", float(end_t - start_t) * 1000.0, "ms")
+                #print("total:", float(end_t - start_t) * 1000.0, "ms")
 
 
 def run_ImageProcessing(save_choice, light_queue, image_encoder_queue):
