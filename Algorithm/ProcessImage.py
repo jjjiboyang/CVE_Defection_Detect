@@ -253,11 +253,6 @@ class Detect:
         if result == "":
             return "0"
 
-        print(result)
-        print(class1)
-        print(class2)
-        print(class3)
-        print(class4)
         return result
 
 
