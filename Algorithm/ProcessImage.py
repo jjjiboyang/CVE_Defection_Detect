@@ -25,7 +25,7 @@ class Detect:
     def detect(self, Image, filename):
         result=""
         ImageScaled=ha.scale_image(Image,1.5,-50)
-        ImageMedian = ha.median_image(ImageScaled, 'circle', 2, 'mirrored')
+        ImageMedian = ha.median_image(ImageScaled, 'circle', 3, 'mirrored')
         # 计算偏差图
         ImageDeviation = ha.deviation_image(ImageMedian, 3, 21)
         # 进行阈值处理
@@ -51,6 +51,11 @@ class Detect:
         class3=(ha.tuple_greater_elem(Area,50) and ha.tuple_greater_elem(3000,Area)) and (ha.tuple_greater_elem(95,gray_min) and ha.tuple_greater_elem(150,gray_mean)) and ha.tuple_greater_elem(100,Height)
         # 连续晶圆和塑化不良
         class4=(ha.tuple_greater_elem(Area,250) and ha.tuple_greater_elem(600,Area)) and ha.tuple_greater_elem(100,Height)
+
+        print(class1)
+        print(class2)
+        print(class3)
+        print(class4)
 
         sum1=ha.tuple_sum(class1)[0]
         sum2=ha.tuple_sum(class2)[0]
