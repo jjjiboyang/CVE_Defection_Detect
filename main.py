@@ -12,8 +12,8 @@ from qt_material import apply_stylesheet
 if __name__ == "__main__":
     multiprocessing.freeze_support()
 
-    # if not os.path.exists("C:/Windows/software.config"):
-    #     exit(0)
+    if not os.path.exists("C:/Windows/software.config"):
+        exit(0)
 
     logger = logger_config()
 
@@ -23,12 +23,12 @@ if __name__ == "__main__":
     os.makedirs(FOLDER, exist_ok=True)
 
     # 创建保存缺陷小图的文件夹
-    os.makedirs("./All_Images/out_long", exist_ok=True)
-    os.makedirs("./All_Images/out_jingyuan", exist_ok=True)
-    os.makedirs("./All_Images/out_black", exist_ok=True)
-    os.makedirs("./All_Images/out_noblack", exist_ok=True)
-    os.makedirs("./All_Images/out_continue", exist_ok=True)
-    os.makedirs("./All_Images/out_water", exist_ok=True)
+    os.makedirs(f"{FOLDER}/out_long", exist_ok=True)
+    os.makedirs(f"{FOLDER}/out_jingyuan", exist_ok=True)
+    os.makedirs(f"{FOLDER}/out_black", exist_ok=True)
+    os.makedirs(f"{FOLDER}/out_noblack", exist_ok=True)
+    os.makedirs(f"{FOLDER}/out_continue", exist_ok=True)
+    os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
 
     app = QApplication(sys.argv)
     window = MainWindow()

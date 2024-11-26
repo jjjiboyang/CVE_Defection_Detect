@@ -1,3 +1,4 @@
+import os
 import queue
 from datetime import datetime
 import cv2
@@ -9,11 +10,24 @@ import halcon as ha
 import time
 
 
+# 资源文件目录访问
+def source_path(relative_path):
+    # 是否Bundle Resource
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+
 class Detect:
     def __init__(self):
+        model1=str(source_path(os.path.join("res","model_water.hdl")))
+        model2=str(source_path(os.path.join("res","model_black.hdl")))
+
         # 读取神经网络模型
-        self.DLModelHandle_water = ha.read_dl_model('./Algorithm/Model/model_water.hdl')
-        self.DLModelHandle_black = ha.read_dl_model('./Algorithm/Model/model_black.hdl')
+        self.DLModelHandle_water = ha.read_dl_model(model1)
+        self.DLModelHandle_black = ha.read_dl_model(model2)
         # 设置模型参数
         ha.set_dl_model_param(self.DLModelHandle_water, 'runtime', 'gpu')
         ha.set_dl_model_param(self.DLModelHandle_black, 'runtime', 'gpu')
@@ -22,6 +36,7 @@ class Detect:
         self.DLSample_black= ha.create_dict()
 
     def detect(self, Image, filename):
+        FOLDER=f"./All_Images/{(datetime.now().strftime('%Y-%m-%d'))}"
         result=""
         ImageScaled=ha.scale_image(Image,1.5,-50)
         ImageMedian = ha.median_image(ImageScaled, 'circle', 3, 'mirrored')
@@ -114,11 +129,13 @@ class Detect:
                 ImageClass = ha.get_dict_tuple(DLResult[0], 'classification_class_ids')
                 if not ImageClass[0]:
                     # 保存图像
-                    output_path = f'./All_Images/out_long/{filename}_{K}.png'
+                    os.makedirs(f"{FOLDER}/out_long", exist_ok=True)
+                    output_path = f"{FOLDER}/out_long/{filename}_{K}.png"
                     ha.write_image(ImageSave, 'png', 0, output_path)
                     break
                 else:
-                    output_path = f'./All_Images/out_water/{filename}_{K}.png'
+                    os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
+                    output_path = f'{FOLDER}/out_water/{filename}_{K}.png'
                     ha.write_image(ImageSave, 'png', 0, output_path)
                     sum1 -= 1
 
@@ -153,11 +170,13 @@ class Detect:
                 ImageClass = ha.get_dict_tuple(DLResult[0], 'classification_class_ids')
                 if not ImageClass[0]:
                     # 保存图像
-                    output_path = f'./All_Images/out_jingyuan/{filename}_{K}.png'
+                    os.makedirs(f"{FOLDER}/out_jingyuan", exist_ok=True)
+                    output_path = f'{FOLDER}/out_jingyuan/{filename}_{K}.png'
                     ha.write_image(ImageSave, 'png', 0, output_path)
                     break
                 else:
-                    output_path = f'./All_Images/out_water/{filename}_{K}.png'
+                    os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
+                    output_path = f'{FOLDER}/out_water/{filename}_{K}.png'
                     ha.write_image(ImageSave, 'png', 0, output_path)
                     sum2 -= 1
 
@@ -195,15 +214,18 @@ class Detect:
                     ImageClass_black = ha.get_dict_tuple(DLResult_black[0], 'classification_class_ids')
                     if not ImageClass_black[0]:
                         # 保存图像
-                        output_path = f'./All_Images/out_black/{filename}_{K}.png'
+                        os.makedirs(f"{FOLDER}/out_black", exist_ok=True)
+                        output_path = f'{FOLDER}/out_black/{filename}_{K}.png'
                         ha.write_image(ImageSave, 'png', 0, output_path)
                         break
                     else:
-                        output_path = f'./All_Images/out_noblack/{filename}_{K}.png'
+                        os.makedirs(f"{FOLDER}/out_noblack", exist_ok=True)
+                        output_path = f'{FOLDER}/out_noblack/{filename}_{K}.png'
                         ha.write_image(ImageSave, 'png', 0, output_path)
                         sum3 -= 1
                 else:
-                    output_path = f'./All_Images/out_water/{filename}_{K}.png'
+                    os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
+                    output_path = f'{FOLDER}/out_water/{filename}_{K}.png'
                     ha.write_image(ImageSave, 'png', 0, output_path)
                     sum3 -= 1
 
@@ -243,11 +265,13 @@ class Detect:
                     if count>3:
                         break
                     # 保存图像
-                    output_path = f'./All_Images/out_continue/{filename}_{K}.png'
+                    os.makedirs(f"{FOLDER}/out_continue", exist_ok=True)
+                    output_path = f'{FOLDER}/out_continue/{filename}_{K}.png'
                     ha.write_image(ImageSave, 'png', 0, output_path)
 
                 else:
-                    output_path = f'./All_Images/out_water/{filename}_{K}.png'
+                    os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
+                    output_path = f'{FOLDER}/out_water/{filename}_{K}.png'
                     ha.write_image(ImageSave, 'png', 0, output_path)
                     sum4 -= 1
 
@@ -333,7 +357,7 @@ class ProcessImage:
                     last_cam2_encoder_value = image_msg.encoder_value
 
                 end_t = time.time()
-                #print("total:", float(end_t - start_t) * 1000.0, "ms")
+                print("total:", float(end_t - start_t) * 1000.0, "ms")
 
 
 def run_ImageProcessing(save_choice, light_queue, image_encoder_queue):
