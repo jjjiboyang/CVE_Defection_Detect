@@ -15928,3 +15928,31 @@ der'
 2024-12-03 12:46:09,974 - root - INFO - Receiver is already stopped.
 2024-12-03 12:46:14,336 - root - INFO - open device successfully 2
 2024-12-03 12:46:14,340 - root - INFO - open device successfully 1
+2024-12-03 15:06:28,200 - root - ERROR - could not open port 'com8': PermissionError(13, '拒绝访问。', None, 5)
+2024-12-03 15:06:28,212 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2024-12-03 15:06:28,322 - root - ERROR - could not open port 'com7': PermissionError(13, '拒绝访问。', None, 5)
+2024-12-03 15:06:28,334 - root - ERROR - 'SignalLight' object has no attribute 'master'
+2024-12-03 15:06:28,335 - root - ERROR - error SignalLight long
+2024-12-03 15:06:28,492 - root - ERROR - open device fail! ret[0x80000203]
+2024-12-03 15:06:28,521 - root - ERROR - open device fail! ret[0x80000203]
+2024-12-03 15:06:32,122 - root - INFO - Receiver is already stopped.
+2024-12-03 15:06:32,122 - root - INFO - Receiver is already stopped.
+2024-12-03 15:06:32,122 - root - INFO - Receiver is already stopped.
+2024-12-03 15:06:32,122 - root - INFO - Receiver is already stopped.
+2024-12-03 15:06:32,122 - root - INFO - Receiver is already stopped.
+2024-12-03 15:06:32,122 - root - INFO - Receiver is already stopped.
+2024-12-03 15:06:36,448 - root - ERROR - could not open port 'com8': PermissionError(13, '拒绝访问。', None, 5)
+2024-12-03 15:06:36,460 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2024-12-03 15:06:36,610 - root - ERROR - could not open port 'com7': PermissionError(13, '拒绝访问。', None, 5)
+2024-12-03 15:06:36,620 - root - ERROR - 'SignalLight' object has no attribute 'master'
+2024-12-03 15:06:36,621 - root - ERROR - error SignalLight long
+2024-12-03 15:06:36,781 - root - ERROR - open device fail! ret[0x80000203]
+2024-12-03 15:06:36,799 - root - ERROR - open device fail! ret[0x80000203]
+2024-12-03 15:06:43,507 - root - INFO - Receiver is already stopped.
+2024-12-03 15:06:43,507 - root - INFO - Receiver is already stopped.
+2024-12-03 15:06:43,507 - root - INFO - Receiver is already stopped.
+2024-12-03 15:06:43,507 - root - INFO - Receiver is already stopped.
+2024-12-03 15:06:43,507 - root - INFO - Receiver is already stopped.
+2024-12-03 15:06:43,507 - root - INFO - Receiver is already stopped.
+2024-12-03 15:06:47,820 - root - INFO - open device successfully 2
+2024-12-03 15:06:47,821 - root - INFO - open device successfully 1
