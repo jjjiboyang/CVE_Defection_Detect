@@ -114,8 +114,8 @@ class SignalLight:
                         print("剔除")
                         continue
                     last_red0 = 1
-                    self.start_blow()
                     pub.send("1")
+                    self.start_blow()
                 if red[0] == 0 and last_red0 == 1:
                     last_red0 = 0
                     self.stop_blow()

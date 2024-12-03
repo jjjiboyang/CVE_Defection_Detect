@@ -151,9 +151,9 @@ class Detect:
                     ha.write_image(ImageSave, 'png', 0, output_path)
                     break
                 else:
-                    os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
-                    output_path = f'{FOLDER}/out_water/{filename}_{K}.png'
-                    ha.write_image(ImageSave, 'png', 0, output_path)
+                    # os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
+                    # output_path = f'{FOLDER}/out_water/{filename}_{K}.png'
+                    # ha.write_image(ImageSave, 'png', 0, output_path)
                     sum1 -= 1
 
             if sum1>0:
@@ -193,9 +193,9 @@ class Detect:
                     ha.write_image(ImageSave, 'png', 0, output_path)
                     break
                 else:
-                    os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
-                    output_path = f'{FOLDER}/out_water/{filename}_{K}.png'
-                    ha.write_image(ImageSave, 'png', 0, output_path)
+                    # os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
+                    # output_path = f'{FOLDER}/out_water/{filename}_{K}.png'
+                    # ha.write_image(ImageSave, 'png', 0, output_path)
                     sum2 -= 1
 
             if sum2>0:
@@ -238,14 +238,14 @@ class Detect:
                         ha.write_image(ImageSave, 'png', 0, output_path)
                         break
                     else:
-                        os.makedirs(f"{FOLDER}/out_noblack", exist_ok=True)
-                        output_path = f'{FOLDER}/out_noblack/{filename}_{K}.png'
-                        ha.write_image(ImageSave, 'png', 0, output_path)
+                        # os.makedirs(f"{FOLDER}/out_noblack", exist_ok=True)
+                        # output_path = f'{FOLDER}/out_noblack/{filename}_{K}.png'
+                        # ha.write_image(ImageSave, 'png', 0, output_path)
                         sum3 -= 1
                 else:
-                    os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
-                    output_path = f'{FOLDER}/out_water/{filename}_{K}.png'
-                    ha.write_image(ImageSave, 'png', 0, output_path)
+                    # os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
+                    # output_path = f'{FOLDER}/out_water/{filename}_{K}.png'
+                    # ha.write_image(ImageSave, 'png', 0, output_path)
                     sum3 -= 1
 
             if sum3>0:
@@ -290,9 +290,9 @@ class Detect:
                     ha.write_image(ImageSave, 'png', 0, output_path)
 
                 else:
-                    os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
-                    output_path = f'{FOLDER}/out_water/{filename}_{K}.png'
-                    ha.write_image(ImageSave, 'png', 0, output_path)
+                    # os.makedirs(f"{FOLDER}/out_water", exist_ok=True)
+                    # output_path = f'{FOLDER}/out_water/{filename}_{K}.png'
+                    # ha.write_image(ImageSave, 'png', 0, output_path)
                     sum4 -= 1
 
             if sum4 > 3:

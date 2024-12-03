@@ -34,14 +34,14 @@ class MainWindow(QMainWindow):
         self.message_queue = multiprocessing.Queue()
         self.light_queue = multiprocessing.Queue()
         self.image_encoder_queue = multiprocessing.Queue()
-        self.defect_types=[1,1,1,1]
+        self.defect_types=[0,1,1,1]
 
         # 启动采集图像的进程
         try:
             self.camera_grab_1 = Process(target=camera_grab_1)
             self.camera_grab_2 = Process(target=camera_grab_2)
-            self.camera_grab_1.start()
-            self.camera_grab_2.start()
+            # self.camera_grab_1.start()
+            # self.camera_grab_2.start()
         except Exception as e:
             self.logger.error(e)
 
