@@ -40,8 +40,8 @@ class MainWindow(QMainWindow):
         try:
             self.camera_grab_1 = Process(target=camera_grab_1)
             self.camera_grab_2 = Process(target=camera_grab_2)
-            # self.camera_grab_1.start()
-            # self.camera_grab_2.start()
+            self.camera_grab_1.start()
+            self.camera_grab_2.start()
         except Exception as e:
             self.logger.error(e)
 
