@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QGraphicsView, QGridLayo
     QLabel, QLayout, QListWidget, QListWidgetItem,
     QMainWindow, QMenu, QMenuBar, QPushButton,
     QSizePolicy, QStatusBar, QVBoxLayout, QWidget)
-import Display.icon_rc
+import icon_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -328,7 +328,7 @@ class Ui_MainWindow(object):
 
         self.checkBox_2 = QCheckBox(self.widget_4)
         self.checkBox_2.setObjectName(u"checkBox_2")
-        self.checkBox_2.setChecked(True)
+        self.checkBox_2.setChecked(False)
 
         self.gridLayout_5.addWidget(self.checkBox_2, 5, 1, 1, 1)
 
@@ -368,7 +368,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1579, 21))
+        self.menubar.setGeometry(QRect(0, 0, 1579, 20))
         self.menu = QMenu(self.menubar)
         self.menu.setObjectName(u"menu")
         self.menu_2 = QMenu(self.menubar)
