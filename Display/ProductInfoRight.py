@@ -56,14 +56,14 @@ class ProductInfoWidgetRight(QWidget):
         self.defects_type1_count,self.defects_type2_count,self.defects_type3_count,self.defects_type4_count=0,0,0,0
         self.blow_count = 0
         self.produced_number_sum = 0
-        self.normal_rate = 0
+        self.bad_rate = 0
         self.graphics_view = graphics_view
         self.running = False
 
         # 创建各个标签
         self.produced_number_label = QLabel(f"实时产量: {self.produced_number_sum}")
         self.rejection_count_label = QLabel(f"缺陷产品数: {self.blow_count}")
-        self.normal_rate_label = QLabel(f"产品良率: {self.normal_rate}%")
+        self.normal_rate_label = QLabel(f"产品良率: {self.bad_rate}%")
         self.defects_type1_label = QLabel(f"长条划痕缺陷数量: {self.defects_type1_count}")
         self.defects_type2_label = QLabel(f"晶圆水斑缺陷数量: {self.defects_type2_count}")
         self.defects_type3_label = QLabel(f"糊料黑点缺陷数量: {self.defects_type3_count}")
@@ -141,7 +141,7 @@ class ProductInfoWidgetRight(QWidget):
         self.rejection_count_label.setText(f"剔除数量: {self.blow_count}")
 
     def update_produced_number(self, product_num):
-        self.produced_number_sum += product_num
-        self.normal_rate = round(self.blow_count / self.produced_number_sum, 2)
+        self.produced_number_sum += 1
+        self.bad_rate = round(self.blow_count / self.produced_number_sum, 5)
         self.produced_number_label.setText(f"实时产量: {self.produced_number_sum}")
-        self.normal_rate_label.setText(f"产品良率: {self.normal_rate}")
+        self.normal_rate_label.setText(f"产品不合格率: {self.bad_rate}")

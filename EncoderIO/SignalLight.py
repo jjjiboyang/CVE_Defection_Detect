@@ -103,7 +103,7 @@ class SignalLight:
                         self.alarm_thread.start()
                     elif data == "1":
                         ti_chu += 1
-                        print(time.time(), "receive")
+                        # print(time.time(), "receive")
                 red = self.master.execute(1, csd.READ_DISCRETE_INPUTS, 0, 1)
                 if red[0] == 1 and last_red0 == 0:
                     if ti_chu >= 1:

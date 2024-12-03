@@ -22,12 +22,19 @@ class ImageDisplayWidget:
         with lmdb.open(db_path) as env:
             with env.begin() as txn:
                 cursor = txn.cursor()
-                keys = [key.decode() for key, _ in cursor]
+                # 反向遍历游标，从最新记录开始
+                cursor.last()  # 定位到数据库的最后一条记录
+                latest_keys = []
 
-                # 获取最新的 200 条数据
-                latest_keys = keys[-50:] if len(keys) > 50 else keys
+                for i, (key, _) in enumerate(cursor):
+                    if i >= 50:  # 只获取最新的50条记录
+                        break
+                    latest_keys.append(key.decode())
 
-                for key in latest_keys:  # 反转以从最新到最旧插入
+                # 反转列表，因为是从最新到最旧插入
+                latest_keys.reverse()
+
+                for key in latest_keys:
                     self.ui.listWidget.insertItem(0, key)
 
                 # 加载最后一条图像进行显示

@@ -21,7 +21,7 @@ def source_path(relative_path):
 
 
 class Detect:
-    def __init__(self):
+    def __init__(self,defect_types):
         model1=str(source_path(os.path.join("res","model_water.hdl")))
         model2=str(source_path(os.path.join("res","model_black.hdl")))
 
@@ -34,6 +34,11 @@ class Detect:
         # 生成一个样本字典
         self.DLSample = ha.create_dict()
         self.DLSample_black= ha.create_dict()
+        # 需要剔除的缺陷种类
+        self.defect_type_1 = defect_types[0]
+        self.defect_type_2 = defect_types[1]
+        self.defect_type_3 = defect_types[2]
+        self.defect_type_4 = defect_types[3]
 
     def detect(self, Image, filename):
         FOLDER=f"./All_Images/{(datetime.now().strftime('%Y-%m-%d'))}"
@@ -58,33 +63,45 @@ class Detect:
 
         # 定义规则类别
         # 长条划痕
-        a=ha.tuple_greater_elem(Area,400)
-        b=ha.tuple_greater_elem(Height,300)
-        c=ha.tuple_greater_elem(2000,Height)
-        d=ha.tuple_greater_elem(10,Deviation)
-        class1 = list(map(lambda x, y, z, w: x & y & z & w, a, b, c, d))
+        if self.defect_type_1==0:
+            class1=[0]
+        else:
+            aa=ha.tuple_greater_elem(Area,400)
+            bb=ha.tuple_greater_elem(Height,600)
+            cc=ha.tuple_greater_elem(2000,Height)
+            dd=ha.tuple_greater_elem(10,Deviation)
+            class1 = list(map(lambda x, y, z, w: x & y & z & w, aa, bb, cc, dd))
 
         # 晶圆
-        a=ha.tuple_greater_elem(Area,600)
-        b=ha.tuple_greater_elem(3000,Area)
-        c=ha.tuple_greater_elem(gray_max,200)
-        d=ha.tuple_greater_elem(gray_mean,150)
-        e=ha.tuple_greater_elem(100,Height)
-        class2=list(map(lambda x, y, z, w, t : x & y & z & w & t, a, b, c, d,e))
+        if self.defect_type_2==0:
+            class2=[0]
+        else:
+            a=ha.tuple_greater_elem(Area,600)
+            b=ha.tuple_greater_elem(3000,Area)
+            c=ha.tuple_greater_elem(gray_max,200)
+            d=ha.tuple_greater_elem(gray_mean,150)
+            e=ha.tuple_greater_elem(100,Height)
+            class2=list(map(lambda x, y, z, w, t : x & y & z & w & t, a, b, c, d,e))
 
         # 糊料
-        a=ha.tuple_greater_elem(Area,50)
-        b=ha.tuple_greater_elem(3000,Area)
-        c=ha.tuple_greater_elem(95,gray_min)
-        d=ha.tuple_greater_elem(150,gray_mean)
-        e=ha.tuple_greater_elem(100, Height)
-        class3 = list(map(lambda x, y, z, w, t: x & y & z & w & t, a, b, c, d, e))
+        if self.defect_type_3==0:
+            class3=[0]
+        else:
+            a=ha.tuple_greater_elem(Area,50)
+            b=ha.tuple_greater_elem(3000,Area)
+            c=ha.tuple_greater_elem(95,gray_min)
+            d=ha.tuple_greater_elem(150,gray_mean)
+            e=ha.tuple_greater_elem(100, Height)
+            class3 = list(map(lambda x, y, z, w, t: x & y & z & w & t, a, b, c, d, e))
 
         # 连续晶圆和塑化不良
-        a=ha.tuple_greater_elem(Area,250)
-        b=ha.tuple_greater_elem(600,Area)
-        c=ha.tuple_greater_elem(100,Height)
-        class4 = list(map(lambda x, y, z: x & y & z, a, b, c))
+        if self.defect_type_4==0:
+            class4=[0]
+        else:
+            a=ha.tuple_greater_elem(Area,250)
+            b=ha.tuple_greater_elem(600,Area)
+            c=ha.tuple_greater_elem(100,Height)
+            class4 = list(map(lambda x, y, z: x & y & z, a, b, c))
 
         sum1=ha.tuple_sum(class1)[0]
         sum2=ha.tuple_sum(class2)[0]
@@ -144,6 +161,7 @@ class Detect:
 
 
         if sum2>0:
+            # print("class2", class2)
             Region2=ha.select_obj(ConnectedRegions,class2_index)
             # 找到最小外接矩形
             Row1, Column1, Row2, Column2 = ha.smallest_rectangle1(Region2)
@@ -184,6 +202,7 @@ class Detect:
                 result+="2"
 
         if sum3 > 0:
+            # print("class3", class3)
             Region3 = ha.select_obj(ConnectedRegions, class3_index)
             # 找到最小外接矩形
             Row1, Column1, Row2, Column2 = ha.smallest_rectangle1(Region3)
@@ -235,6 +254,7 @@ class Detect:
 
 
         if sum4 >= 4:
+            # print("class4", class4)
             count=0
             Region4 = ha.select_obj(ConnectedRegions, class4_index)
             # 找到最小外接矩形
@@ -285,13 +305,13 @@ class Detect:
 
 
 class ProcessImage:
-    def __init__(self, save_choice, light_queue, image_encoder_queue):
+    def __init__(self, save_choice, light_queue, image_encoder_queue,defect_types):
         self.img_queue = queue.Queue()
         self.light_queue = light_queue
         self.save_choice = save_choice
         self.image_encoder_queue = image_encoder_queue
         self.cam_num = 0
-        self.Detect = Detect()
+        self.Detect = Detect(defect_types)
         ecal_core.initialize(sys.argv, "Python Protobuf Subscriber")
         sub_1 = ecal_core.subscriber('defect_detection_topic_1')
         sub_2 = ecal_core.subscriber('defect_detection_topic_2')
@@ -347,7 +367,7 @@ class ProcessImage:
                     pub.send(serialized_message)
 
                 elif self.save_choice == 0:
-                    image_msg.defect_type = 0
+                    image_msg.defect_type = "0"
                     serialized_message = image_msg.SerializeToString()
                     pub.send(serialized_message)
 
@@ -357,9 +377,9 @@ class ProcessImage:
                     last_cam2_encoder_value = image_msg.encoder_value
 
                 end_t = time.time()
-                print("total:", float(end_t - start_t) * 1000.0, "ms")
+                # print("total:", float(end_t - start_t) * 1000.0, "ms")
 
 
-def run_ImageProcessing(save_choice, light_queue, image_encoder_queue):
-    process = ProcessImage(save_choice, light_queue, image_encoder_queue)
+def run_ImageProcessing(save_choice, light_queue, image_encoder_queue,defect_types):
+    process = ProcessImage(save_choice, light_queue, image_encoder_queue,defect_types)
     process.detect_defects()

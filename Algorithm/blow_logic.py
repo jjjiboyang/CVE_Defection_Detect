@@ -13,7 +13,7 @@ class BlowLogic:
         self.image_encoder_queue = image_encoder_queue
         self.light_queue = light_queue
         self.msg = 0
-        self.boundary = 121860  # 122040
+        self.boundary = 122400  # 122040
 
     def detect_blow(self):
         while True:

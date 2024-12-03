@@ -34,6 +34,7 @@ class MainWindow(QMainWindow):
         self.message_queue = multiprocessing.Queue()
         self.light_queue = multiprocessing.Queue()
         self.image_encoder_queue = multiprocessing.Queue()
+        self.defect_types=[1,1,1,1]
 
         # 启动采集图像的进程
         try:
@@ -149,6 +150,10 @@ class MainWindow(QMainWindow):
         self.ui.checkBox_5.stateChanged.connect(self.cBox.on_checkbox5_changed)
         self.ui.checkBox_6.stateChanged.connect(self.cBox.on_checkbox6_changed)
         self.ui.checkBox_4.stateChanged.connect(self.save_image_choice)
+        self.ui.checkBox_1.stateChanged.connect(self.defect_type_change)
+        self.ui.checkBox_2.stateChanged.connect(self.defect_type_change)
+        self.ui.checkBox_9.stateChanged.connect(self.defect_type_change)
+        self.ui.checkBox_10.stateChanged.connect(self.defect_type_change)
 
         '''StatusBar'''
         self.status_text = StatusBar(self.ui)
@@ -165,6 +170,25 @@ class MainWindow(QMainWindow):
                 font-family: Arial;  /* 设置字体类型 */}
         """)
 
+    def defect_type_change(self):
+        if self.ui.checkBox_2.isChecked():
+            self.defect_types[0] = 1
+        else:
+            self.defect_types[0] = 0
+        if self.ui.checkBox_1.isChecked():
+            self.defect_types[1] = 1
+        else:
+            self.defect_types[1] = 0
+        if self.ui.checkBox_9.isChecked():
+            self.defect_types[2] = 1
+        else:
+            self.defect_types[2] = 0
+        if self.ui.checkBox_10.isChecked():
+            self.defect_types[3] = 1
+        else:
+            self.defect_types[3] = 0
+        print(self.defect_types)
+
     def save_image_choice(self):
         if self.ui.checkBox_4.isChecked():
             self.save_choice = 1
@@ -178,7 +202,7 @@ class MainWindow(QMainWindow):
         if not self.status:
             self.ecal_receiver_thread.start_receive()
             self.process_image = Process(target=run_ImageProcessing,
-                                         args=(self.save_choice, self.light_queue, self.image_encoder_queue))
+                                         args=(self.save_choice, self.light_queue, self.image_encoder_queue,self.defect_types))
             self.process_image.start()
             self.save_image = Process(target=SaveImage_ecal, args=(self.save_choice, self.message_queue))
             self.save_image.start()
