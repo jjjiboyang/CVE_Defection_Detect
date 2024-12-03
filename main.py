@@ -15,8 +15,6 @@ if __name__ == "__main__":
 
     # if not os.path.exists("C:/Windows/software.config"):
     #     exit(0)
-    shutil.rmtree("./All_Images")
-    shutil.rmtree("./data_lmdb")
 
     logger = logger_config()
 

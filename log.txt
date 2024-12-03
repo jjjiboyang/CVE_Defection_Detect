@@ -15993,3 +15993,13 @@ der'
 2024-12-03 15:41:00,826 - root - INFO - Receiver is already stopped.
 2024-12-03 15:41:00,826 - root - INFO - Receiver is already stopped.
 2024-12-03 15:41:00,826 - root - INFO - Receiver is already stopped.
+2024-12-03 16:27:21,766 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2024-12-03 16:27:21,787 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2024-12-03 16:29:22,466 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2024-12-03 16:29:22,489 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2024-12-03 16:30:39,275 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2024-12-03 16:30:39,301 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2024-12-03 16:30:56,628 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2024-12-03 16:30:56,639 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2024-12-03 16:31:08,545 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2024-12-03 16:31:08,555 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
