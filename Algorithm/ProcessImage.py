@@ -161,7 +161,6 @@ class Detect:
 
 
         if sum2>0:
-            # print("class2", class2)
             Region2=ha.select_obj(ConnectedRegions,class2_index)
             # 找到最小外接矩形
             Row1, Column1, Row2, Column2 = ha.smallest_rectangle1(Region2)
@@ -202,7 +201,6 @@ class Detect:
                 result+="2"
 
         if sum3 > 0:
-            # print("class3", class3)
             Region3 = ha.select_obj(ConnectedRegions, class3_index)
             # 找到最小外接矩形
             Row1, Column1, Row2, Column2 = ha.smallest_rectangle1(Region3)
@@ -254,7 +252,6 @@ class Detect:
 
 
         if sum4 >= 6:
-            # print("class4", class4)
             count=0
             Region4 = ha.select_obj(ConnectedRegions, class4_index)
             # 找到最小外接矩形
@@ -282,7 +279,7 @@ class Detect:
                 ImageClass = ha.get_dict_tuple(DLResult[0], 'classification_class_ids')
                 if not ImageClass[0]:
                     count+=1
-                    if count>3:
+                    if count>=6:
                         break
                     # 保存图像
                     os.makedirs(f"{FOLDER}/out_continue", exist_ok=True)

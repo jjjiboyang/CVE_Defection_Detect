@@ -40,8 +40,8 @@ class MainWindow(QMainWindow):
         try:
             self.camera_grab_1 = Process(target=camera_grab_1)
             self.camera_grab_2 = Process(target=camera_grab_2)
-            # self.camera_grab_1.start()
-            # self.camera_grab_2.start()
+            self.camera_grab_1.start()
+            self.camera_grab_2.start()
         except Exception as e:
             self.logger.error(e)
 
@@ -242,8 +242,8 @@ class MainWindow(QMainWindow):
         self.ecal_receiver_thread.terminate()
         self.process_signal.terminate()
         # 关闭采集图像的进程
-        # self.camera_grab_1.terminate()
-        # self.camera_grab_2.terminate()
+        self.camera_grab_1.terminate()
+        self.camera_grab_2.terminate()
         event.accept()  # 接受关闭事件
         QApplication.quit()  # 结束主事件循环并退出程序
 

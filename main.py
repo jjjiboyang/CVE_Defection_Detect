@@ -13,8 +13,8 @@ from qt_material import apply_stylesheet
 if __name__ == "__main__":
     multiprocessing.freeze_support()
 
-    # if not os.path.exists("C:/Windows/software.config"):
-    #     exit(0)
+    if not os.path.exists("C:/Windows/software.config"):
+        exit(0)
     if os.path.isfile("log.txt"):
         os.remove("log.txt")
     if os.path.isdir("./All_Images"):
