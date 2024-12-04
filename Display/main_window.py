@@ -40,8 +40,8 @@ class MainWindow(QMainWindow):
         try:
             self.camera_grab_1 = Process(target=camera_grab_1)
             self.camera_grab_2 = Process(target=camera_grab_2)
-            self.camera_grab_1.start()
-            self.camera_grab_2.start()
+            # self.camera_grab_1.start()
+            # self.camera_grab_2.start()
         except Exception as e:
             self.logger.error(e)
 
@@ -132,8 +132,6 @@ class MainWindow(QMainWindow):
         self.ui.verticalLayout_4.addWidget(self.status_widget_2)
 
         '''绑定按钮'''
-        self.ui.Start_Button.clicked.connect(self.product_info_widget_2.start_running)
-        self.ui.Stop_Button.clicked.connect(self.product_info_widget_2.stop_running)
         self.ui.Start_Button.clicked.connect(self.status_widget_1.start_timing)
         self.ui.Stop_Button.clicked.connect(self.status_widget_1.stop_timing)
         self.ui.Start_Button.clicked.connect(self.start_button_clicked)
@@ -238,14 +236,14 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         self.light_queue.put("close")
-        self.product_info_widget_2.stop_running()
+        # self.product_info_widget_2.stop_update_num()
         self.status_widget_2.close_window()
         self.stop_button_clicked()
         self.ecal_receiver_thread.terminate()
         self.process_signal.terminate()
         # 关闭采集图像的进程
-        self.camera_grab_1.terminate()
-        self.camera_grab_2.terminate()
+        # self.camera_grab_1.terminate()
+        # self.camera_grab_2.terminate()
         event.accept()  # 接受关闭事件
         QApplication.quit()  # 结束主事件循环并退出程序
 

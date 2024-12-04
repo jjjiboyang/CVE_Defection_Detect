@@ -1,17 +1,11 @@
-2024-12-03 17:11:10,284 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
-2024-12-03 17:11:10,321 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
-2024-12-03 17:11:11,566 - root - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
-2024-12-03 17:11:11,575 - root - ERROR - 'SignalLight' object has no attribute 'master'
-2024-12-03 17:11:11,575 - root - ERROR - error SignalLight long
-2024-12-03 17:11:19,937 - root - INFO - Receiver is already stopped.
-2024-12-03 17:11:19,937 - root - INFO - Receiver is already stopped.
-2024-12-03 17:11:19,937 - root - INFO - Receiver is already stopped.
-2024-12-03 17:11:19,937 - root - INFO - Receiver is already stopped.
-2024-12-03 17:11:19,937 - root - INFO - Receiver is already stopped.
-2024-12-03 17:11:19,937 - root - INFO - Receiver is already stopped.
-2024-12-03 17:11:20,113 - root - INFO - Receiver is already stopped.
-2024-12-03 17:11:20,113 - root - INFO - Receiver is already stopped.
-2024-12-03 17:11:20,113 - root - INFO - Receiver is already stopped.
-2024-12-03 17:11:20,113 - root - INFO - Receiver is already stopped.
-2024-12-03 17:11:20,113 - root - INFO - Receiver is already stopped.
-2024-12-03 17:11:20,113 - root - INFO - Receiver is already stopped.
+2024-12-04 15:12:49,800 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2024-12-04 15:12:49,818 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2024-12-04 15:12:50,852 - root - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2024-12-04 15:12:50,865 - root - ERROR - 'SignalLight' object has no attribute 'master'
+2024-12-04 15:12:50,866 - root - ERROR - error SignalLight long
+2024-12-04 15:12:53,885 - root - INFO - Receiver is already stopped.
+2024-12-04 15:12:53,885 - root - INFO - Receiver is already stopped.
+2024-12-04 15:12:53,885 - root - INFO - Receiver is already stopped.
+2024-12-04 15:12:53,885 - root - INFO - Receiver is already stopped.
+2024-12-04 15:12:53,885 - root - INFO - Receiver is already stopped.
+2024-12-04 15:12:53,885 - root - INFO - Receiver is already stopped.

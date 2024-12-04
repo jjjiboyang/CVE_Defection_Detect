@@ -89,7 +89,7 @@ class Detect:
         else:
             a=ha.tuple_greater_elem(Area,50)
             b=ha.tuple_greater_elem(3000,Area)
-            c=ha.tuple_greater_elem(95,gray_min)
+            c=ha.tuple_greater_elem(90,gray_min)
             d=ha.tuple_greater_elem(150,gray_mean)
             e=ha.tuple_greater_elem(100, Height)
             class3 = list(map(lambda x, y, z, w, t: x & y & z & w & t, a, b, c, d, e))
@@ -98,7 +98,7 @@ class Detect:
         if self.defect_type_4==0:
             class4=[0]
         else:
-            a=ha.tuple_greater_elem(Area,250)
+            a=ha.tuple_greater_elem(Area,300)
             b=ha.tuple_greater_elem(600,Area)
             c=ha.tuple_greater_elem(100,Height)
             class4 = list(map(lambda x, y, z: x & y & z, a, b, c))
@@ -253,7 +253,7 @@ class Detect:
 
 
 
-        if sum4 >= 4:
+        if sum4 >= 6:
             # print("class4", class4)
             count=0
             Region4 = ha.select_obj(ConnectedRegions, class4_index)
@@ -295,7 +295,7 @@ class Detect:
                     # ha.write_image(ImageSave, 'png', 0, output_path)
                     sum4 -= 1
 
-            if sum4 > 3:
+            if sum4 >= 6:
                 result += "4"
 
         if result == "":

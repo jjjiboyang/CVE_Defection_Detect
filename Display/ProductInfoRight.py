@@ -11,7 +11,7 @@ sys.path.append('data_json.py')
 
 
 class DefectNumber(QThread):
-    defect_type_signal = Signal(str)
+    defect_type_signal = Signal(str)  # 缺陷的种类个数
 
     def __init__(self):
         super().__init__()
@@ -30,8 +30,8 @@ class DefectNumber(QThread):
 
 
 class ProductNumber(QThread):
-    produced_number_signal = Signal(int)
-    blow_number_signal = Signal(int)
+    produced_number_signal = Signal(int)  # 生产产量
+    blow_number_signal = Signal(int)   # 剔除的数量
 
     def __init__(self):
         super().__init__()
@@ -43,8 +43,8 @@ class ProductNumber(QThread):
         sub.set_callback(self.callback)
 
     def callback(self, topic_name, msg, time):
-        if msg == "1":
-            self.produced_number_signal.emit(int(msg))
+        if msg == "111":
+            self.produced_number_signal.emit(1)
         else:
             self.blow_number_signal.emit(1)
 
@@ -63,7 +63,7 @@ class ProductInfoWidgetRight(QWidget):
         # 创建各个标签
         self.produced_number_label = QLabel(f"实时产量: {self.produced_number_sum}")
         self.rejection_count_label = QLabel(f"缺陷产品数: {self.blow_count}")
-        self.normal_rate_label = QLabel(f"产品良率: {self.bad_rate}%")
+        self.normal_rate_label = QLabel(f"产品不合格率: {self.bad_rate}%")
         self.defects_type1_label = QLabel(f"长条划痕缺陷数量: {self.defects_type1_count}")
         self.defects_type2_label = QLabel(f"晶圆水斑缺陷数量: {self.defects_type2_count}")
         self.defects_type3_label = QLabel(f"糊料黑点缺陷数量: {self.defects_type3_count}")
@@ -103,22 +103,28 @@ class ProductInfoWidgetRight(QWidget):
 
         self.defect_num = DefectNumber()
         self.defect_num.defect_type_signal.connect(self.update_counts)
+        self.defect_num.start()
 
         self.product_num = ProductNumber()
         self.product_num.produced_number_signal.connect(self.update_produced_number)
         self.product_num.blow_number_signal.connect(self.update_blow_number)
+        self.product_num.start()
 
-    def start_running(self):
-        if not self.running:  # 确保计时器没有在运行
-            self.running = True
-            self.defect_num.start()
-            self.product_num.start()
+    # def start_running(self):
+    #     if not self.running:  # 确保计时器没有在运行
+    #         self.running = True
+    #         self.defect_num.start()
+    #         self.product_num.start()
 
-    def stop_running(self):
-        if self.running:  # 确保计时器正在运行
-            self.running = False
-            self.defect_num.terminate()
-            self.product_num.terminate()
+    # def stop_running(self):
+    #     if self.running:  # 确保计时器正在运行
+    #         self.running = False
+    #         self.defect_num.terminate()
+    #         self.product_num.terminate()
+
+    def stop_update_num(self):
+        self.defect_num.terminate()
+        self.product_num.terminate()
 
     def update_counts(self, defect_type):
         for i in defect_type:
