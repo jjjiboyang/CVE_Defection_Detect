@@ -145,7 +145,7 @@ class MainWindow(QMainWindow):
         self.ecal_receiver_thread.start()
 
         '''CheckBox'''
-        self.cBox = CheckBox(self.ui, self.light_queue)
+        self.cBox = CheckBox(self.ui, self.light_queue,self.blow_queue)
         self.ui.checkBox_5.stateChanged.connect(self.cBox.on_checkbox5_changed)
         self.ui.checkBox_6.stateChanged.connect(self.cBox.on_checkbox6_changed)
         self.ui.checkBox_4.stateChanged.connect(self.save_image_choice)
@@ -205,7 +205,7 @@ class MainWindow(QMainWindow):
             self.process_image.start()
             self.save_image = Process(target=SaveImage_ecal, args=(self.save_choice, self.message_queue))
             self.save_image.start()
-            self.blow_logic = Process(target=blow, args=(self.image_encoder_queue, self.light_queue,self.blow_queue))
+            self.blow_logic = Process(target=blow, args=(self.image_encoder_queue,self.blow_queue))
             self.blow_logic.start()
             self.status = True
             self.light_queue.put("run")

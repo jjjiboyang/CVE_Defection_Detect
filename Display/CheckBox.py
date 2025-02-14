@@ -6,11 +6,12 @@ from EncoderIO.SignalLight import run_BlowShort
 
 
 class CheckBox:
-    def __init__(self, ui, light_queue):
+    def __init__(self, ui, light_queue,blow_queue):
         super().__init__()
         self.ui = ui
         self.light_queue = light_queue
-        self.blow_signal = Process(target=run_BlowLong, args=(self.light_queue,), daemon=True)
+        self.blow_queue = blow_queue
+        self.blow_signal = Process(target=run_BlowLong, args=(self.light_queue,self.blow_queue), daemon=True)
         self.blow_signal.start()
 
         '''CheckBox'''
@@ -35,11 +36,11 @@ class CheckBox:
     def on_checkbox5_changed(self, state):
         if state == 2:  # Checked
             self.blow_signal.terminate()
-            self.blow_signal = Process(target=run_BlowLong, args=(self.light_queue,), daemon=True)
+            self.blow_signal = Process(target=run_BlowLong, args=(self.light_queue,self.blow_queue), daemon=True)
             self.blow_signal.start()
 
     def on_checkbox6_changed(self, state):
         if state == 2:
             self.blow_signal.terminate()
-            self.blow_signal = Process(target=run_BlowShort, args=(self.light_queue,), daemon=True)
+            self.blow_signal = Process(target=run_BlowShort, args=(self.light_queue,self.blow_queue), daemon=True)
             self.blow_signal.start()

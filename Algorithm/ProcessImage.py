@@ -355,11 +355,16 @@ class ProcessImage:
                     continue
                 defect_num = self.Detect.detect(halcon_image, image_msg.encoder_value)
                 if defect_num != "0":
-                    if self.cam_num == 1:
+                    print(self.cam_num)
+                    print(type(self.cam_num))
+                    if self.cam_num == '1':
                         self.image_encoder_queue.put(last_cam1_encoder_value)
-                    elif self.cam_num == 2:
+                        print("1-前一个图片的编码器值")
+                    elif self.cam_num == '2':
                         self.image_encoder_queue.put(last_cam2_encoder_value)
+                        print("2-前一个图片的编码器值")
                     self.image_encoder_queue.put(image_msg.encoder_value)
+                    print("当前图片编码器值")
                     image_msg.defect_type = defect_num
                     image_msg.is_blow = 1
 
@@ -371,9 +376,9 @@ class ProcessImage:
                     serialized_message = image_msg.SerializeToString()
                     pub.send(serialized_message)
 
-                if self.cam_num == 1:
+                if self.cam_num == '1':
                     last_cam1_encoder_value = image_msg.encoder_value
-                elif self.cam_num == 2:
+                elif self.cam_num == '2':
                     last_cam2_encoder_value = image_msg.encoder_value
 
                 end_t = time.time()

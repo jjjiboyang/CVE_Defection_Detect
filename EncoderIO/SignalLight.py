@@ -10,10 +10,11 @@ import ecal.core.core as ecal_core
 
 
 class SignalLight:
-    def __init__(self, light_queue):
+    def __init__(self, light_queue,blow_queue):
         self.logger = logger_config()
         self.read_thread = None
         self.light_queue = light_queue
+        self.blow_queue = blow_queue
         try:
             self.master = rtu.RtuMaster(serial.Serial(port="com7", baudrate=115200, parity="N"))
             self.master.set_timeout(5.0)
@@ -101,9 +102,9 @@ class SignalLight:
                     elif data == "alarm":
                         self.alarm_thread = Thread(target=self.alarm, daemon=True)
                         self.alarm_thread.start()
-                    if data == "1":
-                        ti_chu += 1
-                        # print(time.time(), "receive")
+                if not self.blow_queue.empty():
+                    signal = self.blow_queue.get()
+                    ti_chu+=int(signal)
                 red = self.master.execute(1, csd.READ_DISCRETE_INPUTS, 0, 1)
                 if red[0] == 1 and last_red0 == 0:
                     if ti_chu >= 1:
@@ -148,16 +149,17 @@ class SignalLight:
                     elif data == "alarm":
                         self.alarm_thread = Thread(target=self.alarm, daemon=True)
                         self.alarm_thread.start()
-                    elif data == "1":
-                        ti_chu += 1
+                if not self.blow_queue.empty():
+                    signal = self.blow_queue.get()
+                    ti_chu+=int(signal)
                 # 读取吹气信号
                 red = self.master.execute(1, csd.READ_DISCRETE_INPUTS, 0, 1)
                 if red[0] == 1 and last_red0 == 0:
                     if ti_chu >= 1:
+                        ti_chu = 0
                         self.light_queue.put("alarm")
                         self.start_blow()
                         last_red0 = 1
-                        ti_chu = 0
                         pub.send("剔除一根")
                         print("剔除")
                         continue
@@ -175,11 +177,11 @@ class SignalLight:
         ecal_core.finalize()
 
 
-def run_BlowLong(light_queue):
-    signal_knife = SignalLight(light_queue)
+def run_BlowLong(light_queue,blow_queue):
+    signal_knife = SignalLight(light_queue,blow_queue)
     signal_knife.blow_long()
 
 
-def run_BlowShort(light_queue):
-    signal_knife = SignalLight(light_queue)
+def run_BlowShort(light_queue,blow_queue):
+    signal_knife = SignalLight(light_queue,blow_queue)
     signal_knife.blow_short()
