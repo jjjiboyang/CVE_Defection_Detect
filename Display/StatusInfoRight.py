@@ -111,7 +111,7 @@ class StatusInfoWidgetRight(QWidget):
     def update_FPS(self, fps1, fps2):
         self.FPS_label.setText(f"显示帧率:  {fps1}帧/秒  {fps2}帧/秒")
 
-    def distance_speed(self, data):  # 在此项目中编码器的值是递减的
+    def distance_speed(self, data):  # 在此项目中编码器的值是递增的
         high = int(data[0:5])
         low = int(data[5::])
         if self.high_front == -1:  # 程序开始时，high_front还没有被赋值
@@ -121,20 +121,25 @@ class StatusInfoWidgetRight(QWidget):
             return
 
         if time.time() - self.time_front >= 1:
-            high_increment = self.high_front - high
+            high_increment = high-self.high_front
             if high_increment == 0:
-                increase = self.low_front - low
-            elif high_increment < 0:
-                increase = self.low_front + (65535 - low)
+                increase = low-self.low_front
+            elif high_increment > 0:
+                increase = (high_increment-1)*65535 + low + (65535-self.low_front)
+                # increase = self.low_front + (65535 - low)
             else:
-                increase = (high_increment - 1) * 100000 + self.low_front + (65535 - low)
-            self.speed_var = increase / 14400 * 0.223 * 60
-            self.distance_var += self.speed_var / 60
-            self.distance_label.setText(f"运行距离(m): {round(self.distance_var, 1)}")
-            self.speed_label.setText(f"运行速度(m/min): {round(self.speed_var, 1)}")  # 更新速度显示
+                increase = high*65535 + low + (65535-self.low_front) + (65535-high)*65535
+                # increase = (high_increment - 1) * 100000 + self.low_front + (65535 - low)
+            # 更新
             self.high_front = high
             self.low_front = low
             self.time_front = time.time()
+
+            self.speed_var = (increase / 14400) * 0.22 * 60
+            self.distance_var += self.speed_var / 60
+            self.distance_label.setText(f"运行距离(m): {round(self.distance_var, 1)}")
+            self.speed_label.setText(f"运行速度(m/min): {round(self.speed_var, 1)}")  # 更新速度显示
+
 
     def update_encoder(self, data):
         # 更新编码器标签

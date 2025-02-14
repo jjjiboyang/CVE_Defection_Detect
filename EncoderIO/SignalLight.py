@@ -101,15 +101,15 @@ class SignalLight:
                     elif data == "alarm":
                         self.alarm_thread = Thread(target=self.alarm, daemon=True)
                         self.alarm_thread.start()
-                    elif data == "1":
+                    if data == "1":
                         ti_chu += 1
                         # print(time.time(), "receive")
                 red = self.master.execute(1, csd.READ_DISCRETE_INPUTS, 0, 1)
                 if red[0] == 1 and last_red0 == 0:
                     if ti_chu >= 1:
+                        ti_chu = 0
                         self.light_queue.put("alarm")
                         last_red0 = 1
-                        ti_chu = 0
                         pub.send("剔除一根")
                         print("剔除")
                         continue

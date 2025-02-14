@@ -1,11 +1,11 @@
-2024-12-04 15:12:49,800 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
-2024-12-04 15:12:49,818 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
-2024-12-04 15:12:50,852 - root - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
-2024-12-04 15:12:50,865 - root - ERROR - 'SignalLight' object has no attribute 'master'
-2024-12-04 15:12:50,866 - root - ERROR - error SignalLight long
-2024-12-04 15:12:53,885 - root - INFO - Receiver is already stopped.
-2024-12-04 15:12:53,885 - root - INFO - Receiver is already stopped.
-2024-12-04 15:12:53,885 - root - INFO - Receiver is already stopped.
-2024-12-04 15:12:53,885 - root - INFO - Receiver is already stopped.
-2024-12-04 15:12:53,885 - root - INFO - Receiver is already stopped.
-2024-12-04 15:12:53,885 - root - INFO - Receiver is already stopped.
+2025-02-10 10:08:30,298 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-02-10 10:08:30,346 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-02-10 10:08:31,111 - root - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-02-10 10:08:31,125 - root - ERROR - 'SignalLight' object has no attribute 'master'
+2025-02-10 10:08:31,125 - root - ERROR - error SignalLight long
+2025-02-10 10:08:39,563 - root - INFO - Receiver is already stopped.
+2025-02-10 10:08:39,563 - root - INFO - Receiver is already stopped.
+2025-02-10 10:08:39,563 - root - INFO - Receiver is already stopped.
+2025-02-10 10:08:39,563 - root - INFO - Receiver is already stopped.
+2025-02-10 10:08:39,563 - root - INFO - Receiver is already stopped.
+2025-02-10 10:08:39,563 - root - INFO - Receiver is already stopped.

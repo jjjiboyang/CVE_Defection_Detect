@@ -6,14 +6,15 @@ from ecal.core.subscriber import StringSubscriber
 
 
 class BlowLogic:
-    def __init__(self, image_encoder_queue, light_queue):
+    def __init__(self, image_encoder_queue, light_queue,blow_queue):
         ecal_core.initialize(sys.argv, "Encoder Value Subscriber")
         sub = StringSubscriber("encoder_topic")
         sub.set_callback(self.callback)
         self.image_encoder_queue = image_encoder_queue
         self.light_queue = light_queue
+        self.blow_queue=blow_queue
         self.msg = 0
-        self.boundary = 121680  # 122040
+        self.boundary = 133920  # 14400一圈编码器 20cm  121680
 
     def detect_blow(self):
         while True:
@@ -22,14 +23,14 @@ class BlowLogic:
                 # print("encoder",encoder_value)
                 while True:
                     now_encoder_value = int(self.msg)
-                    if encoder_value - now_encoder_value > self.boundary:
-                        print(encoder_value - now_encoder_value)
+                    if now_encoder_value - encoder_value > self.boundary:
+                        print(now_encoder_value - encoder_value)
                         self.light_queue.put("1")
                         # print(time.time(),"--send")
                         break
-                    if now_encoder_value > encoder_value:
-                        if encoder_value + (6553565535 - now_encoder_value) > self.boundary:
-                            print(encoder_value - now_encoder_value)
+                    if now_encoder_value < encoder_value:
+                        if now_encoder_value + (6553565535 - encoder_value) > self.boundary:
+                            # print(encoder_value - now_encoder_value)
                             self.light_queue.put("1")
                             # print(time.time(), "--send")
                             break
@@ -38,6 +39,6 @@ class BlowLogic:
         self.msg = msg
 
 
-def blow(image_encoder_queue, light_queue):
-    blow_logic = BlowLogic(image_encoder_queue, light_queue)
+def blow(image_encoder_queue, light_queue,blow_queue):
+    blow_logic = BlowLogic(image_encoder_queue, light_queue,blow_queue)
     blow_logic.detect_blow()

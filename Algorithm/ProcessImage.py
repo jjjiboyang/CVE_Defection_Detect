@@ -30,7 +30,11 @@ class Detect:
         self.DLModelHandle_black = ha.read_dl_model(model2)
         # 设置模型参数
         ha.set_dl_model_param(self.DLModelHandle_water, 'runtime', 'gpu')
+        ha.set_dl_model_param(self.DLModelHandle_water, 'gpu', 0)
+        ha.set_dl_model_param(self.DLModelHandle_water, 'runtime_init', 'immediately')
         ha.set_dl_model_param(self.DLModelHandle_black, 'runtime', 'gpu')
+        ha.set_dl_model_param(self.DLModelHandle_black, 'gpu', 0)
+        ha.set_dl_model_param(self.DLModelHandle_black, 'runtime_init', 'immediately')
         # 生成一个样本字典
         self.DLSample = ha.create_dict()
         self.DLSample_black= ha.create_dict()
@@ -88,11 +92,10 @@ class Detect:
             class3=[0]
         else:
             a=ha.tuple_greater_elem(Area,50)
-            b=ha.tuple_greater_elem(3000,Area)
-            c=ha.tuple_greater_elem(90,gray_min)
-            d=ha.tuple_greater_elem(150,gray_mean)
-            e=ha.tuple_greater_elem(100, Height)
-            class3 = list(map(lambda x, y, z, w, t: x & y & z & w & t, a, b, c, d, e))
+            b=ha.tuple_greater_elem(90,gray_min)
+            c=ha.tuple_greater_elem(150,gray_mean)
+            d=ha.tuple_greater_elem(2000, Height)
+            class3 = list(map(lambda x, y, z, w: x & y & z & w, a, b, c, d))
 
         # 连续晶圆和塑化不良
         if self.defect_type_4==0:

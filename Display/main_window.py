@@ -33,6 +33,7 @@ class MainWindow(QMainWindow):
         self.logger = logger_config()
         self.message_queue = multiprocessing.Queue()
         self.light_queue = multiprocessing.Queue()
+        self.blow_queue = multiprocessing.Queue()
         self.image_encoder_queue = multiprocessing.Queue()
         self.defect_types=[0,1,1,1]
 
@@ -204,7 +205,7 @@ class MainWindow(QMainWindow):
             self.process_image.start()
             self.save_image = Process(target=SaveImage_ecal, args=(self.save_choice, self.message_queue))
             self.save_image.start()
-            self.blow_logic = Process(target=blow, args=(self.image_encoder_queue, self.light_queue))
+            self.blow_logic = Process(target=blow, args=(self.image_encoder_queue, self.light_queue,self.blow_queue))
             self.blow_logic.start()
             self.status = True
             self.light_queue.put("run")
