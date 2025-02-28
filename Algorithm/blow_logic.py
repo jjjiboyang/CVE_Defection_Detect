@@ -13,7 +13,7 @@ class BlowLogic:
         self.image_encoder_queue = image_encoder_queue
         self.blow_queue=blow_queue
         self.msg = 0
-        self.boundary = 133920  # 14400一圈编码器 20cm  121680
+        self.boundary = 134640  # 14400一圈编码器 20cm  121680
 
     def detect_blow(self):
         while True:

@@ -10,7 +10,7 @@ import ecal.core.core as ecal_core
 
 
 class SignalLight:
-    def __init__(self, light_queue,blow_queue):
+    def __init__(self, light_queue, blow_queue):
         self.logger = logger_config()
         self.read_thread = None
         self.light_queue = light_queue
@@ -87,6 +87,7 @@ class SignalLight:
         pub = StringPublisher("io_topic")
         ti_chu = 0
         last_red0 = 0
+        flag = 1
         while ecal_core.ok():
             try:
                 if not self.light_queue.empty():
@@ -104,10 +105,14 @@ class SignalLight:
                         self.alarm_thread.start()
                 if not self.blow_queue.empty():
                     signal = self.blow_queue.get()
-                    ti_chu+=int(signal)
+                    ti_chu += int(signal)
                 red = self.master.execute(1, csd.READ_DISCRETE_INPUTS, 0, 1)
                 if red[0] == 1 and last_red0 == 0:
                     if ti_chu >= 1:
+                        # if flag == 1:
+                        #     flag = 2
+                        # elif flag == 2:
+                        #     flag = 1
                         ti_chu = 0
                         self.light_queue.put("alarm")
                         last_red0 = 1
@@ -151,7 +156,7 @@ class SignalLight:
                         self.alarm_thread.start()
                 if not self.blow_queue.empty():
                     signal = self.blow_queue.get()
-                    ti_chu+=int(signal)
+                    ti_chu += int(signal)
                 # 读取吹气信号
                 red = self.master.execute(1, csd.READ_DISCRETE_INPUTS, 0, 1)
                 if red[0] == 1 and last_red0 == 0:
@@ -177,11 +182,11 @@ class SignalLight:
         ecal_core.finalize()
 
 
-def run_BlowLong(light_queue,blow_queue):
-    signal_knife = SignalLight(light_queue,blow_queue)
+def run_BlowLong(light_queue, blow_queue):
+    signal_knife = SignalLight(light_queue, blow_queue)
     signal_knife.blow_long()
 
 
-def run_BlowShort(light_queue,blow_queue):
-    signal_knife = SignalLight(light_queue,blow_queue)
+def run_BlowShort(light_queue, blow_queue):
+    signal_knife = SignalLight(light_queue, blow_queue)
     signal_knife.blow_short()
