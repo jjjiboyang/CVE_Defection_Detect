@@ -37,6 +37,10 @@ class Ui_MainWindow(object):
         MainWindow.setWindowIcon(icon)
         self.actionCameraGrab = QAction(MainWindow)
         self.actionCameraGrab.setObjectName(u"actionCameraGrab")
+        self.action_1 = QAction(MainWindow)
+        self.action_1.setObjectName(u"action_1")
+        self.action_2 = QAction(MainWindow)
+        self.action_2.setObjectName(u"action_2")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -90,6 +94,7 @@ class Ui_MainWindow(object):
         self.Start_Button.setSizePolicy(sizePolicy2)
         self.Start_Button.setMinimumSize(QSize(0, 80))
         self.Start_Button.setMaximumSize(QSize(250, 16777215))
+        self.Start_Button.setStyleSheet(u"")
 
         self.gridLayout_2.addWidget(self.Start_Button, 3, 4, 1, 1)
 
@@ -381,6 +386,8 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_2.menuAction())
         self.menubar.addAction(self.menu_3.menuAction())
         self.menu.addSeparator()
+        self.menu.addAction(self.action_1)
+        self.menu.addAction(self.action_2)
 
         self.retranslateUi(MainWindow)
 
@@ -393,6 +400,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"\u533b\u7528\u900f\u660e\u7ba1\u6750\u673a\u5668\u89c6\u89c9\u5728\u7ebf\u68c0\u6d4b\u7cfb\u7edf", None))
         self.actionCameraGrab.setText(QCoreApplication.translate("MainWindow", u"CameraGrab", None))
+        self.action_1.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u76f8\u673a", None))
+        self.action_2.setText(QCoreApplication.translate("MainWindow", u"\u5173\u95ed\u76f8\u673a", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"\u7cfb\u7edf\u4fe1\u606f", None))
         self.Start_Button.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u59cb\u68c0\u6d4b", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"\u751f\u4ea7\u4fe1\u606f", None))

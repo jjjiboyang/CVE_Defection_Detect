@@ -14,6 +14,7 @@ from Display.StatusInfoRight import StatusInfoWidgetRight
 from Display.sub_rec_image import EcalReceiverThread
 from Display.WindowTitle import ctQTitleBar
 from Display.StatusBar import StatusBar
+from Display.PushButton import PushButton
 from Log.logger import logger_config
 from Display.CheckBox import CheckBox
 from multiprocessing import Process
@@ -37,14 +38,14 @@ class MainWindow(QMainWindow):
         self.image_encoder_queue = multiprocessing.Queue()
         self.defect_types=[0,1,1,1]
 
-        # 启动采集图像的进程
-        try:
-            self.camera_grab_1 = Process(target=camera_grab_1)
-            self.camera_grab_2 = Process(target=camera_grab_2)
-            self.camera_grab_1.start()
-            self.camera_grab_2.start()
-        except Exception as e:
-            self.logger.error(e)
+        # # 启动采集图像的进程
+        # try:
+        #     self.camera_grab_1 = Process(target=camera_grab_1)
+        #     self.camera_grab_2 = Process(target=camera_grab_2)
+        #     self.camera_grab_1.start()
+        #     self.camera_grab_2.start()
+        # except Exception as e:
+        #     self.logger.error(e)
 
         # 启动发送编码器和IO信号的进程
         self.light_queue.put("ready")
@@ -132,7 +133,13 @@ class MainWindow(QMainWindow):
         self.ui.verticalLayout_3.addWidget(self.status_widget_1)
         self.ui.verticalLayout_4.addWidget(self.status_widget_2)
 
-        '''绑定按钮'''
+        '''绑定按钮和设置按钮样式'''
+        self.PushButtonOperator = PushButton(self.ui)
+        self.ui.Start_Button.pressed.connect(self.PushButtonOperator.HideText)
+        self.ui.Start_Button.released.connect(self.PushButtonOperator.ShowText)
+        self.ui.Start_Button.setStyleSheet("font-size:20px;background-color: #232629;")
+        self.ui.Stop_Button.setStyleSheet("font-size:20px;background-color: #232629;")
+        self.ui.Stop_Button.setEnabled(False)
         self.ui.Start_Button.clicked.connect(self.status_widget_1.start_timing)
         self.ui.Stop_Button.clicked.connect(self.status_widget_1.stop_timing)
         self.ui.Start_Button.clicked.connect(self.start_button_clicked)
@@ -199,6 +206,9 @@ class MainWindow(QMainWindow):
 
     def start_button_clicked(self):
         if not self.status:
+            # 设置按钮样式
+            self.ui.Start_Button.setEnabled(False)
+            self.ui.Stop_Button.setEnabled(True)
             self.ecal_receiver_thread.start_receive()
             self.process_image = Process(target=run_ImageProcessing,
                                          args=(self.save_choice, self.light_queue, self.image_encoder_queue,self.defect_types))
@@ -210,9 +220,6 @@ class MainWindow(QMainWindow):
             self.status = True
             self.light_queue.put("run")
             self.status_text.show("开始接收图片")
-        else:
-            self.status_text.show("已在接收图片")
-            self.logger.info("Receiver is already running.")
 
     def update_graphics_view_1(self, img):
         self.ui.graphicsView_1.set_image(img)
@@ -224,6 +231,10 @@ class MainWindow(QMainWindow):
 
     def stop_button_clicked(self):
         if self.status:
+            # 设置按钮样式
+            self.ui.Start_Button.setEnabled(True)
+            self.ui.Stop_Button.setEnabled(False)
+
             self.ecal_receiver_thread.stop_receive()
             self.process_image.terminate()
             self.save_image.terminate()
@@ -231,13 +242,9 @@ class MainWindow(QMainWindow):
             self.status = False
             self.light_queue.put("stop")
             self.status_text.show("停止接收图片")
-        else:
-            self.status_text.show("已停止接收图片")
-            self.logger.info("Receiver is already stopped.")
 
     def closeEvent(self, event):
         self.light_queue.put("close")
-        # self.product_info_widget_2.stop_update_num()
         self.status_widget_2.close_window()
         self.stop_button_clicked()
         self.ecal_receiver_thread.terminate()

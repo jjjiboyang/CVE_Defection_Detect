@@ -126,6 +126,9 @@
         <height>16777215</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="text">
        <string>开始检测</string>
       </property>
@@ -325,7 +328,20 @@
           </widget>
          </item>
          <item row="1" column="2">
-          <widget class="QGraphicsView" name="graphicsView_3"/>
+          <widget class="QGraphicsView" name="graphicsView_3">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
          </item>
          <item row="0" column="1">
           <widget class="QLabel" name="label_2">
@@ -651,29 +667,74 @@ font-size:17px;</string>
      <height>20</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="menu_2">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
     <property name="title">
      <string>控制</string>
     </property>
-    <addaction name="separator"/>
+    <addaction name="actionOpen_Camera"/>
+    <addaction name="actionClode_Camera"/>
    </widget>
-   <widget class="QMenu" name="menu_2">
+   <widget class="QMenu" name="menu_3">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
     <property name="title">
      <string>设置</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_3">
+   <widget class="QMenu" name="menu">
     <property name="title">
      <string>关于</string>
     </property>
    </widget>
-   <addaction name="menu"/>
    <addaction name="menu_2"/>
    <addaction name="menu_3"/>
+   <addaction name="menu"/>
   </widget>
   <action name="actionCameraGrab">
    <property name="text">
     <string>CameraGrab</string>
+   </property>
+  </action>
+  <action name="action_1">
+   <property name="text">
+    <string>打开相机</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>关闭相机</string>
+   </property>
+  </action>
+  <action name="actionOpen_Camera">
+   <property name="text">
+    <string>Open Camera</string>
+   </property>
+  </action>
+  <action name="actionClode_Camera">
+   <property name="text">
+    <string>Close Camera</string>
    </property>
   </action>
  </widget>
