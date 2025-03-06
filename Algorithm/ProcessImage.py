@@ -60,10 +60,11 @@ class Detect:
         Height, Width, Ratio=ha.height_width_ratio(ConnectedRegions)
         gray_min, gray_max, Range=ha.min_max_gray(ConnectedRegions,Image,0)
         gray_mean, Deviation=ha.intensity(ConnectedRegions,Image)
-        Length=ha.tuple_length(Area)
 
-        if Length<=4:
-            return "0"
+        # Length=ha.tuple_length(Area)
+
+        # if Length<=4:
+        #     return "0"
 
         # 定义规则类别
         # 长条划痕
@@ -355,8 +356,6 @@ class ProcessImage:
                     continue
                 defect_num = self.Detect.detect(halcon_image, image_msg.encoder_value)
                 if defect_num != "0":
-                    print(self.cam_num)
-                    print(type(self.cam_num))
                     if self.cam_num == '1':
                         self.image_encoder_queue.put(last_cam1_encoder_value)
                         print("1-前一个图片的编码器值")
