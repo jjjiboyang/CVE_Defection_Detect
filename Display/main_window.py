@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, Q
 from Display.GUI import Ui_MainWindow
 from Display.GraphicsView_One import CustomGraphicsView
 from Display.GraphicsView_Two import ImageListView
+from Display.Menu_Action import MenuAction
 from Display.ProductInfoLeft import ProductInfoWidgetLeft
 from Display.ProductInfoRight import ProductInfoWidgetRight
 from Display.StatusInfoLeft import StatusInfoWidgetLeft
@@ -23,9 +24,6 @@ from Algorithm.ProcessImage import run_ImageProcessing
 from Display.database_list import ImageDisplayWidget
 from Algorithm.SaveImage import SaveImage_ecal
 from Algorithm.blow_logic import blow
-from CamGrab.Camera1 import camera_grab_1
-from CamGrab.Camera2 import camera_grab_2
-
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -37,15 +35,6 @@ class MainWindow(QMainWindow):
         self.blow_queue = multiprocessing.Queue()
         self.image_encoder_queue = multiprocessing.Queue()
         self.defect_types=[0,1,1,1]
-
-        # # 启动采集图像的进程
-        # try:
-        #     self.camera_grab_1 = Process(target=camera_grab_1)
-        #     self.camera_grab_2 = Process(target=camera_grab_2)
-        #     self.camera_grab_1.start()
-        #     self.camera_grab_2.start()
-        # except Exception as e:
-        #     self.logger.error(e)
 
         # 启动发送编码器和IO信号的进程
         self.light_queue.put("ready")
@@ -89,6 +78,9 @@ class MainWindow(QMainWindow):
         # 添加现有布局到新的中央小部件
         self.mainLayout.addLayout(self.existingLayout)
         self.ui.menubar.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+
+        '''设置Menu和Action'''
+        self.menu_action = MenuAction(self.ui,self.logger)
 
         '''字体大小'''
         self.ui.label_1.setStyleSheet("font-size: 20px;font-weight: bold;color:White;")
@@ -250,8 +242,7 @@ class MainWindow(QMainWindow):
         self.ecal_receiver_thread.terminate()
         self.process_signal.terminate()
         # 关闭采集图像的进程
-        self.camera_grab_1.terminate()
-        self.camera_grab_2.terminate()
+        self.ui.actionClose_Camera.trigger()
         event.accept()  # 接受关闭事件
         QApplication.quit()  # 结束主事件循环并退出程序
 

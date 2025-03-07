@@ -684,7 +684,7 @@ font-size:17px;</string>
      <string>控制</string>
     </property>
     <addaction name="actionOpen_Camera"/>
-    <addaction name="actionClode_Camera"/>
+    <addaction name="actionClose_Camera"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="sizePolicy">
@@ -732,7 +732,7 @@ font-size:17px;</string>
     <string>Open Camera</string>
    </property>
   </action>
-  <action name="actionClode_Camera">
+  <action name="actionClose_Camera">
    <property name="text">
     <string>Close Camera</string>
    </property>
