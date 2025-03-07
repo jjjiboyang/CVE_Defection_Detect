@@ -11,7 +11,7 @@ class MenuAction:
         self.ui.menu_2.setStyleSheet("Margin:10px")
         self.ui.actionOpen_Camera.triggered.connect(self.open_camera)
         self.ui.actionClose_Camera.triggered.connect(self.close_camera)
-        self.ui.actionOpen_Camera.trigger()
+        # self.ui.actionOpen_Camera.trigger()
 
     def open_camera(self):
         self.ui.actionOpen_Camera.setEnabled(False)

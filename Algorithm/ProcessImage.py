@@ -30,11 +30,7 @@ class Detect:
         self.DLModelHandle_black = ha.read_dl_model(model2)
         # 设置模型参数
         ha.set_dl_model_param(self.DLModelHandle_water, 'runtime', 'gpu')
-        ha.set_dl_model_param(self.DLModelHandle_water, 'gpu', 0)
-        ha.set_dl_model_param(self.DLModelHandle_water, 'runtime_init', 'immediately')
         ha.set_dl_model_param(self.DLModelHandle_black, 'runtime', 'gpu')
-        ha.set_dl_model_param(self.DLModelHandle_black, 'gpu', 0)
-        ha.set_dl_model_param(self.DLModelHandle_black, 'runtime_init', 'immediately')
         # 生成一个样本字典
         self.DLSample = ha.create_dict()
         self.DLSample_black= ha.create_dict()
@@ -47,6 +43,7 @@ class Detect:
     def detect(self, Image, filename):
         FOLDER=f"./All_Images/{(datetime.now().strftime('%Y-%m-%d'))}"
         result=""
+        RectanglePoints = []
         ImageScaled=ha.scale_image(Image,1.5,-50)
         ImageMedian = ha.median_image(ImageScaled, 'circle', 3, 'mirrored')
         # 计算偏差图
@@ -60,11 +57,6 @@ class Detect:
         Height, Width, Ratio=ha.height_width_ratio(ConnectedRegions)
         gray_min, gray_max, Range=ha.min_max_gray(ConnectedRegions,Image,0)
         gray_mean, Deviation=ha.intensity(ConnectedRegions,Image)
-
-        # Length=ha.tuple_length(Area)
-
-        # if Length<=4:
-        #     return "0"
 
         # 定义规则类别
         # 长条划痕
@@ -139,16 +131,19 @@ class Detect:
             # 判断有无水珠
             ImageConverted = ha.convert_image_type(ImageCrop, 'real')
             ImageZoom = ha.zoom_image_size(ImageConverted, 40, 100, 'constant')
+            ImageScaled1 = ha.scale_image(ImageZoom,1,-127)
 
             for K in range(1, sum1 + 1):
                 # 选择对象
-                ImageSingle = ha.select_obj(ImageZoom, K)
+                ImageSingle = ha.select_obj(ImageScaled1, K)
                 ImageSave = ha.select_obj(ImageCrop, K)
                 ha.set_dict_object(ImageSingle, self.DLSample, 'image')
                 # 对处理后的样本字典送进模型进行推理，得到推理结果
                 DLResult = ha.apply_dl_model(self.DLModelHandle_water, [self.DLSample], [])
                 ImageClass = ha.get_dict_tuple(DLResult[0], 'classification_class_ids')
                 if not ImageClass[0]:
+                    # 传入缺陷区域矩形参数
+                    RectanglePoints.append([Row11[K-1], Column11[K-1], Row21[K-1], Column21[K-1]])
                     # 保存图像
                     os.makedirs(f"{FOLDER}/out_long", exist_ok=True)
                     output_path = f"{FOLDER}/out_long/{filename}_{K}.png"
@@ -180,16 +175,19 @@ class Detect:
             # 判断有无水珠
             ImageConverted = ha.convert_image_type(ImageCrop, 'real')
             ImageZoom = ha.zoom_image_size(ImageConverted, 40, 100, 'constant')
+            ImageScaled1 = ha.scale_image(ImageZoom, 1, -127)
 
             for K in range(1, sum2 + 1):
                 # 选择对象
-                ImageSingle = ha.select_obj(ImageZoom, K)
+                ImageSingle = ha.select_obj(ImageScaled1, K)
                 ImageSave = ha.select_obj(ImageCrop, K)
                 ha.set_dict_object(ImageSingle, self.DLSample, 'image')
                 # 对处理后的样本字典送进模型进行推理，得到推理结果
                 DLResult = ha.apply_dl_model(self.DLModelHandle_water, [self.DLSample], [])
                 ImageClass = ha.get_dict_tuple(DLResult[0], 'classification_class_ids')
                 if not ImageClass[0]:
+                    # 传入缺陷区域矩形参数
+                    RectanglePoints.append([Row11[K - 1], Column11[K - 1], Row21[K - 1], Column21[K - 1]])
                     # 保存图像
                     os.makedirs(f"{FOLDER}/out_jingyuan", exist_ok=True)
                     output_path = f'{FOLDER}/out_jingyuan/{filename}_{K}.png'
@@ -220,10 +218,11 @@ class Detect:
             # 判断有无水珠
             ImageConverted = ha.convert_image_type(ImageCrop, 'real')
             ImageZoom = ha.zoom_image_size(ImageConverted, 40, 100, 'constant')
+            ImageScaled1 = ha.scale_image(ImageZoom, 1, -127)
 
             for K in range(1, sum3 + 1):
                 # 选择对象
-                ImageSingle = ha.select_obj(ImageZoom, K)
+                ImageSingle = ha.select_obj(ImageScaled1, K)
                 ImageSave = ha.select_obj(ImageCrop, K)
                 ha.set_dict_object(ImageSingle, self.DLSample, 'image')
                 # 对处理后的样本字典送进模型进行推理，得到推理结果
@@ -234,6 +233,8 @@ class Detect:
                     DLResult_black = ha.apply_dl_model(self.DLModelHandle_black, [self.DLSample_black], [])
                     ImageClass_black = ha.get_dict_tuple(DLResult_black[0], 'classification_class_ids')
                     if not ImageClass_black[0]:
+                        # 传入缺陷区域矩形参数
+                        RectanglePoints.append([Row11[K - 1], Column11[K - 1], Row21[K - 1], Column21[K - 1]])
                         # 保存图像
                         os.makedirs(f"{FOLDER}/out_black", exist_ok=True)
                         output_path = f'{FOLDER}/out_black/{filename}_{K}.png'
@@ -272,10 +273,11 @@ class Detect:
             # 判断有无水珠
             ImageConverted = ha.convert_image_type(ImageCrop, 'real')
             ImageZoom = ha.zoom_image_size(ImageConverted, 40, 100, 'constant')
+            ImageScaled1 = ha.scale_image(ImageZoom, 1, -127)
 
             for K in range(1, sum4 + 1):
                 # 选择对象
-                ImageSingle = ha.select_obj(ImageZoom, K)
+                ImageSingle = ha.select_obj(ImageScaled1, K)
                 ImageSave = ha.select_obj(ImageCrop, K)
                 ha.set_dict_object(ImageSingle, self.DLSample, 'image')
                 # 对处理后的样本字典送进模型进行推理，得到推理结果
@@ -285,6 +287,8 @@ class Detect:
                     count+=1
                     if count>=6:
                         break
+                    # 传入缺陷区域矩形参数
+                    RectanglePoints.append([Row11[K - 1], Column11[K - 1], Row21[K - 1], Column21[K - 1]])
                     # 保存图像
                     os.makedirs(f"{FOLDER}/out_continue", exist_ok=True)
                     output_path = f'{FOLDER}/out_continue/{filename}_{K}.png'
@@ -302,7 +306,7 @@ class Detect:
         if result == "":
             return "0"
 
-        return result
+        return result,RectanglePoints
 
 
 class ProcessImage:
@@ -328,7 +332,7 @@ class ProcessImage:
     def detect_defects(self):
         ecal_core.initialize(sys.argv, "Processed Image Publisher")
         pub = ecal_core.publisher('ProcessedImage')
-        last_cam1_encoder_value = 0
+        last_cam1_encoder_value = 11
         last_cam2_encoder_value = 0
         count = 0
         while ecal_core.ok():
@@ -354,8 +358,9 @@ class ProcessImage:
                 if last_cam2_encoder_value == 0:
                     last_cam2_encoder_value = image_msg.encoder_value
                     continue
-                defect_num = self.Detect.detect(halcon_image, image_msg.encoder_value)
-                if defect_num != "0":
+                defect_type_num, Points = self.Detect.detect(halcon_image, image_msg.encoder_value)
+                print(defect_type_num, Points)
+                if defect_type_num != "0":
                     if self.cam_num == '1':
                         self.image_encoder_queue.put(last_cam1_encoder_value)
                         print("1-前一个图片的编码器值")
@@ -363,8 +368,16 @@ class ProcessImage:
                         self.image_encoder_queue.put(last_cam2_encoder_value)
                         print("2-前一个图片的编码器值")
                     self.image_encoder_queue.put(image_msg.encoder_value)
-                    print("当前图片编码器值")
-                    image_msg.defect_type = defect_num
+
+                    # **添加多个区域**
+                    for point in Points:  # 假设 Points 里存的是 (row1, column1, row2, column2) 这样的缺陷区域
+                        region = image_msg.regions.add()  # 添加一个 Region
+                        region.row1 = point[0]
+                        region.column1 = point[1]
+                        region.row2 = point[2]
+                        region.column2 = point[3]
+
+                    image_msg.defect_type = defect_type_num
                     image_msg.is_blow = 1
 
                     serialized_message = image_msg.SerializeToString()

@@ -20,14 +20,14 @@ class UpdateImage(QThread):
 
     def run(self):
         ecal_core.initialize(sys.argv, "Processed Image Subscriber")
-        sub = ecal_core.subscriber('ProcessedImage')
+        sub = ecal_core.subscriber('DisplayImage')
         sub.set_callback(self.callback)
 
     def callback(self, topic_name, msg, time):
         received_message = datatype_pb2.ImageParameters()
         received_message.ParseFromString(msg)
         np_arr = np.frombuffer(received_message.data, np.uint8)
-        img = cv2.imdecode(np_arr, cv2.IMREAD_GRAYSCALE)
+        img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
         image_filename = received_message.filename
 
         # 发射解码后的图像和缺陷数据
@@ -56,7 +56,7 @@ class ImageListView(QGraphicsView):
         # 创建并启动定时器
         self.timer_update_view = QTimer(self)
         self.timer_update_view.timeout.connect(self.update_view)
-        self.timer_update_view.start(100)  # 每10毫秒更新一次视图
+        self.timer_update_view.start(1000)  # 每1000毫秒更新一次视图
 
         self.update_image = UpdateImage()
         self.update_image.img_data.connect(self.add_image)
@@ -88,7 +88,7 @@ class ImageListView(QGraphicsView):
         height, width = img.shape[:2]
 
         # 将 OpenCV 图像转换为 QImage
-        q_img = QImage(img.data, width, height, width, QImage.Format.Format_Grayscale8)
+        q_img = QImage(img.data, width, height, width*3, QImage.Format.Format_BGR888)
 
         # 根据视口大小调整缩略图尺寸
         thumbnail_size = QSize(self.viewport().width(), self.viewport().height() // 4)
