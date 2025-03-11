@@ -1,6 +1,6 @@
 import time
 from threading import Thread
-from Log.logger import logger_config
+from Log.logger import LoggerManager
 import sys
 import modbus_tk.defines as csd
 import modbus_tk.modbus_rtu as rtu
@@ -11,7 +11,7 @@ import ecal.core.core as ecal_core
 
 class SignalLight:
     def __init__(self, light_queue, blow_queue):
-        self.logger = logger_config()
+        self.logger = LoggerManager.get_logger()
         self.read_thread = None
         self.light_queue = light_queue
         self.blow_queue = blow_queue

@@ -1,36 +1,34 @@
 import logging
+import os
 from datetime import datetime
 
 
-def logger_config(logging_name=''):
-    '''
-    配置log
-    :param log_path: 输出log路径
-    :param logging_name: 记录中name，可随意
-    :return:
-    '''
-    '''
-    logger是日志对象，handler是流处理器，console是控制台输出（没有console也可以，将不会在控制台输出，会在日志文件中输出）
-    '''
-    # 获取日期文件名
-    log_path = f"./log/{(datetime.now().strftime('%Y-%m-%d'))}.txt"
-    # 获取logger对象,取名
-    logger = logging.getLogger(logging_name)
-    # 输出DEBUG及以上级别的信息，针对所有输出的第一层过滤
-    logger.setLevel(level=logging.DEBUG)
-    # 获取文件日志句柄并设置日志级别，第二层过滤
-    handler = logging.FileHandler(log_path, encoding='UTF-8')
-    handler.setLevel(logging.INFO)
-    # 生成并设置文件日志格式
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    # 为logger对象添加句柄
-    logger.addHandler(handler)
-    return logger
+class LoggerManager:
+    _logger = None  # 静态变量
 
-# if __name__ == "__main__":
-#     logger = logger_config(log_path='log.txt', logging_name='')
-#     logger.info("info")
-#     logger.error("error")
-#     logger.debug("debug")
-#     logger.warning("warning")
+    @staticmethod
+    def get_logger():
+        """ 获取全局 logger（单例模式） """
+        if LoggerManager._logger is None:
+            log_dir = "./log"
+            os.makedirs(log_dir, exist_ok=True)
+            log_path = os.path.join(log_dir, f"{datetime.now().strftime('%Y-%m-%d')}.txt")
+
+            logger = logging.getLogger("global_logger")
+            logger.setLevel(logging.DEBUG)
+
+            # 避免重复添加 Handler
+            if not logger.handlers:
+                file_handler = logging.FileHandler(log_path, encoding="utf-8")
+                console_handler = logging.StreamHandler()
+                formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
+                file_handler.setFormatter(formatter)
+                console_handler.setFormatter(formatter)
+
+                logger.addHandler(file_handler)
+                logger.addHandler(console_handler)
+
+            LoggerManager._logger = logger
+
+        return LoggerManager._logger

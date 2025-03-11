@@ -38,3 +38,12 @@
 2025-03-11 16:16:20,241 - root - INFO - 停止接收图片
 2025-03-11 16:16:20,241 - root - INFO - 停止接收图片
 2025-03-11 16:16:20,241 - root - INFO - 停止接收图片
+2025-03-11 16:33:00,606 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:33:00,619 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-11 16:33:21,001 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:33:21,016 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-11 16:33:21,777 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:33:21,791 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-11 16:33:21,791 - global_logger - ERROR - error SignalLight long
+2025-03-11 16:33:36,763 - global_logger - INFO - 开始接收图片
+2025-03-11 16:33:40,178 - global_logger - INFO - 停止接收图片

@@ -7,7 +7,7 @@ import shutil
 from datetime import datetime
 from PySide6.QtWidgets import QApplication
 from Display.main_window import MainWindow
-from Log.logger import logger_config
+from Log.logger import LoggerManager
 from qt_material import apply_stylesheet
 
 if __name__ == "__main__":

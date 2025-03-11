@@ -4,7 +4,7 @@ import sys
 import CamGrab.datatype_pb2 as datatype_pb2
 import cv2
 import concurrent.futures
-from Log.logger import logger_config
+from Log.logger import LoggerManager
 import numpy as np
 from PySide6.QtCore import Qt, QSize, QThread, Signal, QTimer
 from PySide6.QtGui import QImage, QPixmap
@@ -17,7 +17,7 @@ class UpdateImage(QThread):
 
     def __init__(self):
         super().__init__()
-        self.logger = logger_config()
+        self.logger = LoggerManager.get_logger()
 
     def run(self):
         ecal_core.initialize(sys.argv, "Processed Image Subscriber")

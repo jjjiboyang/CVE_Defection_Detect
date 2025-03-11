@@ -16,7 +16,7 @@ from Display.sub_rec_image import EcalReceiverThread
 from Display.WindowTitle import ctQTitleBar
 from Display.StatusBar import StatusBar
 from Display.PushButton import PushButton
-from Log.logger import logger_config
+from Log.logger import LoggerManager
 from Display.CheckBox import CheckBox
 from multiprocessing import Process
 from EncoderIO.SignalGrab import run_SignalGrab
@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         # 日志
-        self.logger = logger_config()
+        self.logger = LoggerManager.get_logger()
         self.message_queue = multiprocessing.Queue()
         self.light_queue = multiprocessing.Queue()
         self.blow_queue = multiprocessing.Queue()

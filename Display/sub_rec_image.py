@@ -4,7 +4,7 @@ import numpy as np
 from PySide6.QtCore import QThread, Signal
 import CamGrab.datatype_pb2 as datatype_pb2
 import ecal.core.core as ecal_core
-from Log.logger import logger_config
+from Log.logger import LoggerManager
 
 
 class EcalReceiverThread(QThread):
@@ -13,7 +13,7 @@ class EcalReceiverThread(QThread):
 
     def __init__(self):
         super().__init__()
-        self.looger = logger_config()
+        self.looger = LoggerManager.get_logger()
         self.running = False
 
     def run(self):

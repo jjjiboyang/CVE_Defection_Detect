@@ -4,12 +4,12 @@ import modbus_tk.defines as csd
 import modbus_tk.modbus_rtu as rtu
 import serial
 from ecal.core.publisher import StringPublisher
-from Log.logger import logger_config
+from Log.logger import LoggerManager
 
 
 class PubSignal:
     def __init__(self):
-        self.logger = logger_config()
+        self.logger = LoggerManager.get_logger()
         try:
             self.master_encoder = rtu.RtuMaster(serial.Serial(port="com8", baudrate=115200, parity="N"))
             self.master_encoder.set_timeout(5.0)

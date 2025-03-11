@@ -8,7 +8,7 @@ from CamGrab.CameraParams_header import *
 from CamGrab.MvCameraControl_class import *
 from CamGrab.PixelType_header import *
 from CamGrab.MvCameraControl_class import MvCamera
-from Log.logger import logger_config
+from Log.logger import LoggerManager
 
 
 class Camera:
@@ -16,7 +16,7 @@ class Camera:
         self.device_list = None
         self.cam = None
         self.encoder_value = [0]
-        self.logger = logger_config()
+        self.logger = LoggerManager.get_logger()
 
         ecal_core.initialize(sys.argv, "Encoder Value Subscriber")
         sub = StringSubscriber("encoder_topic")
