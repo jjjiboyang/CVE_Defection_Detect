@@ -2,32 +2,19 @@
 
 import multiprocessing
 import os
+import shutil
 import sys
 from datetime import datetime
 from PySide6.QtWidgets import QApplication
 from Display.main_window import MainWindow
 from Log.logger import logger_config
 from qt_material import apply_stylesheet
-import hashlib
-import uuid
-
-
-def get_machine_id():
-    return hashlib.sha256(uuid.getnode().to_bytes(6, 'big')).hexdigest()
-
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()
 
-    license_key = "cec372e3696b03da1e958cbd01313e0bf2de7f58772e26178edfca7376e9532e"
-    machine_id = get_machine_id()
-
-    if machine_id != license_key:
-        print("授权失败")
-        exit(0)
-    else:
-        print("授权成功")
-
+    # if not os.path.exists("C:/Windows/software.config"):
+    #     exit(0)
     if os.path.isfile("log.txt"):
         os.remove("log.txt")
     # if os.path.isdir("./All_Images"):
