@@ -27,6 +27,7 @@ class SendImage:
         """从本地读取图片并发送"""
         ecal_core.initialize(sys.argv, "Grab Image Publisher")
         pub = ecal_core.publisher(f'defect_detection_topic_2')
+        count=0
 
         # 获取文件夹中的所有图片
         image_files = [f for f in os.listdir(self.image_folder) if f.endswith(".bmp")]
@@ -59,7 +60,7 @@ class SendImage:
             image_msg.width = width
             image_msg.height = height
             image_msg.encoder_value = self.encoder_value[0]  # 使用最新编码器值
-            image_msg.timestamp = 1733268329529  # 模拟时间戳
+            image_msg.timestamp = 1733268329529+count  # 模拟时间戳
             image_msg.filename = image_name  # 记录文件名
 
             # 发送消息
@@ -67,6 +68,7 @@ class SendImage:
             pub.send(serialized_message)
             print(f"Sent image: {image_name}")
 
+            count+=100
             time.sleep(5)
 
         print("All images processed.")

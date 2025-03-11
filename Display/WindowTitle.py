@@ -55,10 +55,10 @@ class ctQTitleBar(QWidget):
         # 标题栏图标
         self.lblIcon = QLabel(self)
         # 标题栏标题
-        self.lblTitle = QLabel("医用透明管材机器视觉在线检测系统V1.0")
+        self.lblTitle = QLabel("医用透明管材机器视觉在线检测系统V3.1.1")
         self.lblTitle.setStyleSheet("font-size:14px;padding-left:5px;")
         # 标题栏弹簧
-        self.spacer = QSpacerItem(TITLE_SPACER_WIDTH, TITLE_BAR_HEIGHT, QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.spacer = QSpacerItem(TITLE_SPACER_WIDTH, TITLE_BAR_HEIGHT, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         # 最小化按钮图标
         self.btnMin = QPushButton(self)
         # 最大化按钮图标
@@ -93,8 +93,8 @@ class ctQTitleBar(QWidget):
         self.lblIcon.setFixedSize(TITLE_LABEL_SIZE, TITLE_LABEL_SIZE)
         self.lblTitle.setFixedHeight(TITLE_LABEL_SIZE)
         # 图标及标题设置居中
-        self.lblIcon.setAlignment(Qt.AlignCenter)
-        self.lblTitle.setAlignment(Qt.AlignCenter)
+        self.lblIcon.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lblTitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
         # 设置最小化按钮背景
         self.btnMin.setIcon(QIcon(TITLE_MIN_ICON))
         # 设置最大化按钮背景
@@ -120,11 +120,11 @@ class ctQTitleBar(QWidget):
         self.layoutMain.addWidget(self.lblTitle)
         self.layoutMain.addItem(self.spacer)
         self.layoutMain.addWidget(self.btnMin)
-        self.layoutMain.addSpacerItem(QSpacerItem(5, 0, QSizePolicy.Fixed, QSizePolicy.Fixed))
+        self.layoutMain.addSpacerItem(QSpacerItem(5, 0, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed))
         self.layoutMain.addWidget(self.btnMax)
-        self.layoutMain.addSpacerItem(QSpacerItem(5, 0, QSizePolicy.Fixed, QSizePolicy.Fixed))
+        self.layoutMain.addSpacerItem(QSpacerItem(5, 0, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed))
         self.layoutMain.addWidget(self.btnClose)
-        self.layoutMain.addSpacerItem(QSpacerItem(10, 0, QSizePolicy.Fixed, QSizePolicy.Fixed))
+        self.layoutMain.addSpacerItem(QSpacerItem(10, 0, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed))
 
     # 设置窗体标题栏标题
     def f_setTitle(self, title):

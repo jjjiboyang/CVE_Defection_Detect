@@ -107,7 +107,7 @@ class MainWindow(QMainWindow):
         # 获取当前日期并格式化
         current_date = datetime.now().strftime("%Y-%m-%d")
         self.ui.graphicsView_3.deleteLater()
-        self.ui.graphicsView_3 = ImageListView(f"./All_Images/{current_date}", self.ui.widget_1)
+        self.ui.graphicsView_3 = ImageListView(f"./All_Images/{current_date}/defect_images/", self.ui.widget_1)
         self.ui.graphicsView_3.setObjectName(u"graphicsView_3")
         self.ui.graphicsView_3.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         # 添加布局
@@ -212,6 +212,7 @@ class MainWindow(QMainWindow):
             self.status = True
             self.light_queue.put("run")
             self.status_text.show("开始接收图片")
+            self.logger.info("开始接收图片")
 
     def update_graphics_view_1(self, img):
         self.ui.graphicsView_1.set_image(img)
@@ -234,6 +235,7 @@ class MainWindow(QMainWindow):
             self.status = False
             self.light_queue.put("stop")
             self.status_text.show("停止接收图片")
+            self.logger.info("停止接收图片")
 
     def closeEvent(self, event):
         self.light_queue.put("close")

@@ -8,7 +8,8 @@ from Log.logger import logger_config
 import numpy as np
 from PySide6.QtCore import Qt, QSize, QThread, Signal, QTimer
 from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsPixmapItem, QSizePolicy
+from PySide6.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsPixmapItem, QSizePolicy, QDialog, QLabel, \
+    QVBoxLayout
 
 
 class UpdateImage(QThread):
@@ -34,6 +35,44 @@ class UpdateImage(QThread):
         self.img_data.emit(img, image_filename)
 
 
+class ImageViewer(QDialog):
+    def __init__(self, img, filename):
+        super().__init__()
+        self.setWindowTitle(filename)
+
+        self.img = img  # 存储 OpenCV 图像
+        self.label = QLabel(self)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.label)
+        self.setLayout(layout)
+
+        # **获取原始图片尺寸**
+        img_height, img_width = self.img.shape[:2]
+
+        # **设置窗口大小为图片的 50%**
+        self.setGeometry(1000, 100, img_width // 2, img_height // 2)  # (x, y, width, height)
+
+        # **显示图片并保持宽高比**
+        self.update_image()
+
+    def update_image(self):
+        """显示图片，并保持原始宽高比"""
+        height, width = self.img.shape[:2]
+        bytes_per_line = 3 * width
+        q_img = QImage(self.img.data, width, height, bytes_per_line, QImage.Format.Format_BGR888)
+        pixmap = QPixmap.fromImage(q_img)
+
+        # **让 QLabel 显示图片，并且按原始比例缩放**
+        scaled_pixmap = pixmap.scaled(self.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        self.label.setPixmap(scaled_pixmap)
+
+def show_image_with_pyqt(img, filename):
+    """使用 PyQt 显示图片，支持窗口缩放"""
+    viewer = ImageViewer(img, filename)
+    viewer.exec()
+
+
 class ImageListView(QGraphicsView):
     def __init__(self, folder_path, parent=None):
         super().__init__(parent)
@@ -54,9 +93,9 @@ class ImageListView(QGraphicsView):
         self.load_images_from_folder(folder_path)
 
         # 创建并启动定时器
-        self.timer_update_view = QTimer(self)
-        self.timer_update_view.timeout.connect(self.update_view)
-        self.timer_update_view.start(1000)  # 每1000毫秒更新一次视图
+        # self.timer_update_view = QTimer(self)
+        # self.timer_update_view.timeout.connect(self.update_view)
+        # self.timer_update_view.start(2000)  # 每1000毫秒更新一次视图
 
         self.update_image = UpdateImage()
         self.update_image.img_data.connect(self.add_image)
@@ -74,7 +113,9 @@ class ImageListView(QGraphicsView):
             key=lambda x: os.path.getmtime(x), reverse=False)
 
         for image_file in image_files:
-            img = cv2.imread(image_file, cv2.IMREAD_GRAYSCALE)
+            img = cv2.imread(image_file, cv2.IMREAD_COLOR)
+            if img is None:
+                print(f"Error: Failed to load image {image_file}")
             if img is not None:
                 self.add_image(img, image_file)
 
@@ -142,14 +183,6 @@ class ImageListView(QGraphicsView):
         if item is not None:
             original_img = item.data(0)
             filename = item.data(1)
-
-            # 创建一个可调整大小的窗口
-            cv2.namedWindow(filename, cv2.WINDOW_NORMAL)
-            cv2.imshow(filename, original_img)
-
-            # 允许用户通过拖拽调整窗口的大小
-            cv2.resizeWindow(filename, original_img.shape[1], original_img.shape[0])
-
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+            show_image_with_pyqt(original_img,filename)
         super().mouseDoubleClickEvent(event)
+

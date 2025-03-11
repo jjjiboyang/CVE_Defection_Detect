@@ -1,0 +1,40 @@
+2025-03-11 16:02:32,953 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:02:32,962 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-11 16:02:33,400 - root - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:02:33,408 - root - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-11 16:02:33,408 - root - ERROR - error SignalLight long
+2025-03-11 16:03:46,602 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:03:46,613 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-11 16:03:47,080 - root - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:03:47,087 - root - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-11 16:03:47,087 - root - ERROR - error SignalLight long
+2025-03-11 16:04:32,554 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:04:32,563 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-11 16:04:32,922 - root - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:04:32,931 - root - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-11 16:04:32,931 - root - ERROR - error SignalLight long
+2025-03-11 16:05:04,366 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:05:04,376 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-11 16:05:04,871 - root - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:05:04,879 - root - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-11 16:05:04,879 - root - ERROR - error SignalLight long
+2025-03-11 16:14:32,045 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:14:32,058 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-11 16:14:32,674 - root - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:14:32,686 - root - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-11 16:14:32,686 - root - ERROR - error SignalLight long
+2025-03-11 16:16:10,783 - root - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:16:10,797 - root - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-11 16:16:11,426 - root - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-11 16:16:11,436 - root - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-11 16:16:11,436 - root - ERROR - error SignalLight long
+2025-03-11 16:16:18,082 - root - INFO - 开始接收图片
+2025-03-11 16:16:18,082 - root - INFO - 开始接收图片
+2025-03-11 16:16:18,082 - root - INFO - 开始接收图片
+2025-03-11 16:16:18,082 - root - INFO - 开始接收图片
+2025-03-11 16:16:18,082 - root - INFO - 开始接收图片
+2025-03-11 16:16:20,241 - root - INFO - 停止接收图片
+2025-03-11 16:16:20,241 - root - INFO - 停止接收图片
+2025-03-11 16:16:20,241 - root - INFO - 停止接收图片
+2025-03-11 16:16:20,241 - root - INFO - 停止接收图片
+2025-03-11 16:16:20,241 - root - INFO - 停止接收图片

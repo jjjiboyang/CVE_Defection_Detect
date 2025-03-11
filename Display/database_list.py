@@ -24,7 +24,7 @@ class ImageDisplayWidget:
                 cursor = txn.cursor()
                 keys = [key.decode() for key, _ in cursor]
 
-                # 获取最新的 200 条数据
+                # 获取最新的 50 条数据
                 latest_keys = keys[-50:] if len(keys) > 50 else keys
 
                 for key in latest_keys:  # 反转以从最新到最旧插入
@@ -39,7 +39,7 @@ class ImageDisplayWidget:
                             if image_data:
                                 pixmap = QPixmap()
                                 pixmap.loadFromData(image_data)
-                                scaled_pixmap = pixmap.scaled(self.ui.label_12.size() * 20,
+                                scaled_pixmap = pixmap.scaled(self.ui.label_12.size()*17,
                                                               Qt.AspectRatioMode.KeepAspectRatio,
                                                               Qt.TransformationMode.SmoothTransformation)
                                 self.ui.label_12.setPixmap(scaled_pixmap)

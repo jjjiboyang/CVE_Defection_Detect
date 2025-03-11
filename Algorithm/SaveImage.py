@@ -48,7 +48,7 @@ class SaveImages:
     def save_images_database(self, image_msg_data, timestamp):
         # map_size定义最大储存容量，单位是kb，以下定义10G容量
         # env = lmdb.open("./data_lmdb", map_size=50 * 1024 * 1024 * 1024)
-        env = lmdb.open("./data_lmdb", map_size=10*1024 * 1024 * 1024)
+        env = lmdb.open("./data_lmdb", map_size= 100*1024 * 1024 * 1024)
         txn = env.begin(write=True)
         dt_object = datetime.fromtimestamp(timestamp / 1000.0)
         date_time = str(dt_object.strftime('%m-%d %H:%M:%S'))
@@ -60,7 +60,7 @@ class SaveImages:
 
     def save_images_folder(self, img, image_filename):
         # 创建以当前日期命名的文件夹
-        folder_name = f"./All_Images/{(datetime.now().strftime('%Y-%m-%d'))}"
+        folder_name = f"./All_Images/{(datetime.now().strftime('%Y-%m-%d'))}/defect_images/"
         # 创建文件夹保存所有图片
         os.makedirs(folder_name, exist_ok=True)
         # 保存图片到指定文件夹

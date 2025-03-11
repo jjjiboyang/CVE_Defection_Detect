@@ -1,7 +1,8 @@
 import logging
+from datetime import datetime
 
 
-def logger_config(log_path='log.txt', logging_name=''):
+def logger_config(logging_name=''):
     '''
     配置log
     :param log_path: 输出log路径
@@ -11,6 +12,8 @@ def logger_config(log_path='log.txt', logging_name=''):
     '''
     logger是日志对象，handler是流处理器，console是控制台输出（没有console也可以，将不会在控制台输出，会在日志文件中输出）
     '''
+    # 获取日期文件名
+    log_path = f"./log/{(datetime.now().strftime('%Y-%m-%d'))}.txt"
     # 获取logger对象,取名
     logger = logging.getLogger(logging_name)
     # 输出DEBUG及以上级别的信息，针对所有输出的第一层过滤

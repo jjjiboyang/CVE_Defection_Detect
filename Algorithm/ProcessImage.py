@@ -95,7 +95,7 @@ class Detect:
 
             # 特大缺陷
             a = ha.tuple_greater_elem(Area, 5000)
-            b = ha.tuple_greater_elem(Height, 2000)
+            b = ha.tuple_greater_elem(2000, Height)
             class5 = list(map(lambda x, y: x & y, a, b))
 
         # 连续晶圆和塑化不良
@@ -369,7 +369,7 @@ class ProcessImage:
                 # 将 NumPy 数组转换为 Halcon 图像
                 halcon_image = ha.himage_from_numpy_array(img)
                 timestamp = image_msg.timestamp
-                image_filename = f"./All_Images/{datetime.now().strftime('%Y-%m-%d')}/{self.cam_num}_{timestamp}.bmp"
+                image_filename = f"./All_Images/{datetime.now().strftime('%Y-%m-%d')}/defect_images/{self.cam_num}_{timestamp}.bmp"
                 image_msg.filename = image_filename
                 count += 1
                 if last_cam1_encoder_value == 0:
