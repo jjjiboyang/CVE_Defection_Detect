@@ -139,6 +139,7 @@ class SignalLight:
         pub = StringPublisher("io_topic")
         ti_chu = 0
         last_red0 = 0
+        flag = 1
         while ecal_core.ok():
             try:
                 if not self.light_queue.empty():
@@ -160,9 +161,13 @@ class SignalLight:
                 # 读取吹气信号
                 red = self.master.execute(1, csd.READ_DISCRETE_INPUTS, 0, 1)
                 if red[0] == 1 and last_red0 == 0:
-                    if ti_chu >= 1:
+                    if ti_chu >= 1 or flag == 2:
+                        if flag == 1:
+                            flag = 2
+                            self.light_queue.put("alarm")
+                        elif flag == 2:
+                            flag = 1
                         ti_chu = 0
-                        self.light_queue.put("alarm")
                         self.start_blow()
                         last_red0 = 1
                         pub.send("剔除一根")
