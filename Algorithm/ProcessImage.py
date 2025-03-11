@@ -352,7 +352,7 @@ class ProcessImage:
     def detect_defects(self):
         ecal_core.initialize(sys.argv, "Processed Image Publisher")
         pub = ecal_core.publisher('ProcessedImage')
-        last_cam1_encoder_value = 11
+        last_cam1_encoder_value = 0
         last_cam2_encoder_value = 0
         count = 0
         while ecal_core.ok():
