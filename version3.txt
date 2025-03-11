@@ -30,7 +30,7 @@ StringFileInfo(
   StringTable(
     u'040904B0',
     [StringStruct(u'CompanyName', u'北京康视杰智能科技有限公司'), 
-    StringStruct(u'FileDescription', u'Release3.11'),    # 文件说明
+    StringStruct(u'FileDescription', u'医疗透明管材机器视觉瑕疵检测系统V3.1.1'),    # 文件说明
     StringStruct(u'FileVersion', u'3.1.1'),
     StringStruct(u'InternalName', u'SVN'),
     StringStruct(u'LegalCopyright', u'北京康视杰智能科技有限公司版权所有'), #版权
