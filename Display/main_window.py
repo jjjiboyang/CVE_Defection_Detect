@@ -245,6 +245,7 @@ class MainWindow(QMainWindow):
         self.process_signal.terminate()
         # 关闭采集图像的进程
         self.ui.actionClose_Camera.trigger()
+        self.logger.info("关闭窗口")
         event.accept()  # 接受关闭事件
         QApplication.quit()  # 结束主事件循环并退出程序
 
