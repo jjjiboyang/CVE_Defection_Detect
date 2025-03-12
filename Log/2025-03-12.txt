@@ -1,0 +1,72 @@
+2025-03-12 17:50:23,691 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 17:50:23,746 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-12 17:50:24,419 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 17:50:24,428 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-12 17:50:24,428 - global_logger - ERROR - error SignalLight long
+2025-03-12 17:50:43,729 - global_logger - INFO - 关闭窗口
+2025-03-12 18:03:30,066 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:03:30,076 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-12 18:03:30,902 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:03:30,910 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-12 18:03:30,910 - global_logger - ERROR - error SignalLight long
+2025-03-12 18:03:34,078 - global_logger - INFO - 关闭窗口
+2025-03-12 18:25:32,739 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:25:32,749 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-12 18:25:32,797 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:25:32,805 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-12 18:25:32,805 - global_logger - ERROR - error SignalLight long
+2025-03-12 18:25:34,374 - global_logger - INFO - 关闭窗口
+2025-03-12 18:25:40,657 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:25:40,668 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-12 18:25:40,760 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:25:40,768 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-12 18:25:40,768 - global_logger - ERROR - error SignalLight long
+2025-03-12 18:25:41,315 - global_logger - INFO - 关闭窗口
+2025-03-12 18:28:41,907 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:28:41,918 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-12 18:28:41,988 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:28:41,995 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-12 18:28:41,995 - global_logger - ERROR - error SignalLight long
+2025-03-12 18:28:44,786 - global_logger - INFO - 关闭窗口
+2025-03-12 18:28:49,666 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:28:49,676 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-12 18:28:49,718 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:28:49,728 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-12 18:28:49,728 - global_logger - ERROR - error SignalLight long
+2025-03-12 18:28:51,064 - global_logger - INFO - 关闭窗口
+2025-03-12 18:29:44,941 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:29:44,951 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-12 18:29:45,024 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:29:45,032 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-12 18:29:45,032 - global_logger - ERROR - error SignalLight long
+2025-03-12 18:29:49,009 - global_logger - INFO - 关闭窗口
+2025-03-12 18:29:55,073 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:29:55,082 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-12 18:29:55,136 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:29:55,143 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-12 18:29:55,143 - global_logger - ERROR - error SignalLight long
+2025-03-12 18:29:56,032 - global_logger - INFO - 关闭窗口
+2025-03-12 18:30:47,263 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:30:47,275 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-12 18:30:47,359 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:30:47,366 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-12 18:30:47,366 - global_logger - ERROR - error SignalLight long
+2025-03-12 18:30:48,044 - global_logger - INFO - 关闭窗口
+2025-03-12 18:30:55,749 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:30:55,760 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-12 18:30:55,829 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:30:55,836 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-12 18:30:55,836 - global_logger - ERROR - error SignalLight long
+2025-03-12 18:30:56,271 - global_logger - INFO - 关闭窗口
+2025-03-12 18:31:13,100 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:31:13,111 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-12 18:31:13,163 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:31:13,170 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-12 18:31:13,171 - global_logger - ERROR - error SignalLight long
+2025-03-12 18:31:16,382 - global_logger - INFO - 关闭窗口
+2025-03-12 18:31:25,788 - global_logger - ERROR - could not open port 'com8': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:31:25,798 - global_logger - ERROR - 'PubSignal' object has no attribute 'master_encoder'
+2025-03-12 18:31:25,857 - global_logger - ERROR - could not open port 'com7': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2025-03-12 18:31:25,864 - global_logger - ERROR - 'SignalLight' object has no attribute 'master'
+2025-03-12 18:31:25,864 - global_logger - ERROR - error SignalLight long
+2025-03-12 18:31:26,501 - global_logger - INFO - 关闭窗口

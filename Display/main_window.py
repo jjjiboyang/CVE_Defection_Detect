@@ -243,6 +243,8 @@ class MainWindow(QMainWindow):
         self.stop_button_clicked()
         self.ecal_receiver_thread.terminate()
         self.process_signal.terminate()
+        # 关闭信号接发的进程
+        self.cBox.blow_signal.terminate()
         # 关闭采集图像的进程
         self.ui.actionClose_Camera.trigger()
         self.logger.info("关闭窗口")

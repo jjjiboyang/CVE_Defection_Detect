@@ -4,11 +4,13 @@ import multiprocessing
 import os
 import sys
 import shutil
+import time
 from datetime import datetime
 from PySide6.QtWidgets import QApplication
 from Display.main_window import MainWindow
 from Log.logger import LoggerManager
 from qt_material import apply_stylesheet
+from Display.loading_screen import LoadingScreen
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()
@@ -41,6 +43,12 @@ if __name__ == "__main__":
     os.makedirs(f"{FOLDER}/defect_images", exist_ok=True)
 
     app = QApplication(sys.argv)
+
+    # 显示加载界面
+    loading_screen = LoadingScreen()
+    loading_screen.exec()  # 运行加载界面（会阻塞，直到加载完成）
+
+    # 继续加载主界面
     window = MainWindow()
 
     extra = {
