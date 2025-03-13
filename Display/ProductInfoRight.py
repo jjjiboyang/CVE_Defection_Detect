@@ -45,7 +45,7 @@ class ProductNumber(QThread):
     def callback(self, topic_name, msg, time):
         if msg == "111":
             self.produced_number_signal.emit(1)
-        else:
+        elif msg == "剔除一根":
             self.blow_number_signal.emit(1)
 
 

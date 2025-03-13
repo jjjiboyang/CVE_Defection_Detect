@@ -152,6 +152,8 @@ class SignalLight:
                 tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
                 filename, line, func, text = tb[-1]  # 获取最后一条错误信息
                 self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+                # 让循环继续运行，而不是直接退出
+                continue
 
         ecal_core.finalize()
 
@@ -194,7 +196,7 @@ class SignalLight:
                         pub.send("剔除一根")
                         print("剔除")
                         continue
-                    pub.send("1")
+                    pub.send("111")
                 if red[0] == 0 and last_red0 == 1:
                     last_red0 = 0
                     self.stop_blow()
@@ -206,6 +208,9 @@ class SignalLight:
                 tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
                 filename, line, func, text = tb[-1]  # 获取最后一条错误信息
                 self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+                # 让循环继续运行，而不是直接退出
+                continue
+
         ecal_core.finalize()
 
 

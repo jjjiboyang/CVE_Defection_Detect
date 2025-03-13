@@ -23,11 +23,10 @@ class BlowLogic:
             try:
                 if not self.image_encoder_queue.empty():
                     encoder_value = self.image_encoder_queue.get()
-                    self.logger.info("拿到的encoder",encoder_value)
                     while True:
                         now_encoder_value = int(self.msg)
                         if now_encoder_value - encoder_value > self.boundary:
-                            print(now_encoder_value - encoder_value)
+                            self.logger.info(f"编码器差值：{now_encoder_value}-{encoder_value}={now_encoder_value-encoder_value}")
                             self.blow_queue.put("1")
                             # print(time.time(),"--send")
                             break
