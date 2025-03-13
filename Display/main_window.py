@@ -25,6 +25,7 @@ from Display.database_list import ImageDisplayWidget
 from Algorithm.SaveImage import SaveImage_ecal
 from Algorithm.blow_logic import blow
 
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -192,9 +193,6 @@ class MainWindow(QMainWindow):
             self.save_choice = 1
         else:
             self.save_choice = 0
-
-    def update_statusbar(self, message):
-        self.status_text.show(message)
 
     def start_button_clicked(self):
         if not self.status:

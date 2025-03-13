@@ -157,7 +157,7 @@ class SignalLight:
                 tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
                 filename, line, func, text = tb[-1]  # 获取最后一条错误信息
                 self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
-                break
+
         ecal_core.finalize()
 
     def blow_short(self):
@@ -211,7 +211,6 @@ class SignalLight:
                 tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
                 filename, line, func, text = tb[-1]  # 获取最后一条错误信息
                 self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
-                break
         ecal_core.finalize()
 
 
