@@ -16,8 +16,9 @@ class SignalLight:
         self.read_thread = None
         self.light_queue = light_queue
         self.blow_queue = blow_queue
+
         try:
-            self.master = rtu.RtuMaster(serial.Serial(port="com7", baudrate=115200, parity="N"))
+            self.master = rtu.RtuMaster(serial.Serial(port="com7", baudrate=115200, parity="N",bytesize=8,stopbits=1))
             self.master.set_timeout(5.0)
             self.master.set_verbose(False)
         except Exception as e:
@@ -123,7 +124,7 @@ class SignalLight:
                     elif data == "alarm":
                         self.alarm_thread = Thread(target=self.alarm, daemon=True)
                         self.alarm_thread.start()
-                if not self.blow_queue.empty():
+                while not self.blow_queue.empty():
                     signal = self.blow_queue.get()
                     ti_chu += int(signal)
                 red = self.master.execute(1, csd.READ_DISCRETE_INPUTS, 0, 1)

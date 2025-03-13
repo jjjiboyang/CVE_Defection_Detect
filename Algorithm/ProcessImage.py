@@ -100,7 +100,8 @@ class Detect:
                 # 特大缺陷
                 a = ha.tuple_greater_elem(Area, 5000)
                 b = ha.tuple_greater_elem(2000, Height)
-                class5 = list(map(lambda x, y: x & y, a, b))
+                c = ha.tuple_greater_elem(Width, 80)
+                class5 = list(map(lambda x, y, z: x & y & z, a, b, c))
 
             # 连续晶圆和塑化不良
             if self.defect_type_4 == 0:
@@ -134,15 +135,9 @@ class Detect:
                 Region5 = ha.select_obj(RegionFillUp, class5_index)
                 # 找到最小外接矩形
                 Row1, Column1, Row2, Column2 = ha.smallest_rectangle1(Region5)
-                # 创建矩形区域
-                Rectangle = ha.gen_rectangle1(Row1, Column1, Row2, Column2)
-                # 膨胀矩形区域
-                RegionDilation = ha.dilation_rectangle1(Rectangle, 32, 32)
-                # 重新计算最小外接矩形
-                Row11, Column11, Row21, Column21 = ha.smallest_rectangle1(RegionDilation)
-                for K in range(1, sum1 + 1):
+                for K in range(1, sum5 + 1):
                     # 传入缺陷区域矩形参数
-                    RectanglePoints.append([Row11[K - 1], Column11[K - 1], Row21[K - 1], Column21[K - 1]])
+                    RectanglePoints.append([Row1[K - 1], Column1[K - 1], Row2[K - 1], Column2[K - 1]])
                 return "3", RectanglePoints
 
             # 提取区域
@@ -337,9 +332,8 @@ class Detect:
 
 
 class ProcessImage:
-    def __init__(self, save_choice, light_queue, image_encoder_queue, defect_types):
+    def __init__(self, save_choice, image_encoder_queue, defect_types):
         self.img_queue = queue.Queue()
-        self.light_queue = light_queue
         self.save_choice = save_choice
         self.image_encoder_queue = image_encoder_queue
         self.cam_num = 0
@@ -363,11 +357,8 @@ class ProcessImage:
             pub = ecal_core.publisher('ProcessedImage')
             last_cam1_encoder_value = 0
             last_cam2_encoder_value = 0
-            count = 0
             while ecal_core.ok():
-                if count == 100:
-                    count = 0
-                    # print("size:",self.img_queue.qsize())
+                # print("size:",self.img_queue.qsize())
                 if not self.img_queue.empty():
                     start_t = time.time()
                     data = self.img_queue.get()
@@ -380,7 +371,6 @@ class ProcessImage:
                     timestamp = image_msg.timestamp
                     image_filename = f"./All_Images/{datetime.now().strftime('%Y-%m-%d')}/defect_images/{self.cam_num}_{timestamp}.bmp"
                     image_msg.filename = image_filename
-                    count += 1
                     if last_cam1_encoder_value == 0:
                         last_cam1_encoder_value = image_msg.encoder_value
                         continue
@@ -431,6 +421,6 @@ class ProcessImage:
             self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
 
 
-def run_ImageProcessing(save_choice, light_queue, image_encoder_queue, defect_types):
-    process = ProcessImage(save_choice, light_queue, image_encoder_queue, defect_types)
+def run_ImageProcessing(save_choice, image_encoder_queue, defect_types):
+    process = ProcessImage(save_choice, image_encoder_queue, defect_types)
     process.detect_defects()

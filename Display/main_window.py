@@ -201,7 +201,7 @@ class MainWindow(QMainWindow):
             self.ui.Stop_Button.setEnabled(True)
             self.ecal_receiver_thread.start_receive()
             self.process_image = Process(target=run_ImageProcessing,
-                                         args=(self.save_choice, self.light_queue, self.image_encoder_queue,self.defect_types))
+                                         args=(self.save_choice, self.image_encoder_queue,self.defect_types))
             self.process_image.start()
             self.save_image = Process(target=SaveImage_ecal, args=(self.save_choice, self.message_queue))
             self.save_image.start()
