@@ -84,11 +84,6 @@ class SignalLight:
             filename, line, func, text = tb[-1]  # 获取最后一条错误信息
             self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
 
-    def start_reading(self):
-        if self.read_thread is None or not self.read_thread.is_alive():
-            self.read_thread = Thread(target=self.blow_long, daemon=True)
-            self.read_thread.start()
-
     def start_blow(self):
         try:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=6, output_value=1)
