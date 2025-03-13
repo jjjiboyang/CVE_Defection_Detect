@@ -10,7 +10,7 @@ class CustomGraphicsView(QGraphicsView):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
         self.setDragMode(QGraphicsView.DragMode.ScrollHandDrag)  # 启用拖动模式
-        self.setRenderHint(QPainter.Antialiasing)  # 启用抗锯齿
+        self.setRenderHint(QPainter.RenderHint.Antialiasing)  # 启用抗锯齿
         self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)  # 缩放从鼠标位置开始
         self.setResizeAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)  # 窗口大小调整从鼠标位置开始
         self.scale_factor = 1.15  # 设置缩放因子

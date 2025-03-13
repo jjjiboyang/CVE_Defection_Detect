@@ -20,7 +20,7 @@ class UpdateImage(QThread):
         self.logger = LoggerManager.get_logger()
 
     def run(self):
-        ecal_core.initialize(sys.argv, "Processed Image Subscriber")
+        ecal_core.initialize(sys.argv, "Display Image Subscriber")
         sub = ecal_core.subscriber('DisplayImage')
         sub.set_callback(self.callback)
 

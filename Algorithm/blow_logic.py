@@ -3,13 +3,14 @@
 import sys
 import ecal.core.core as ecal_core
 from ecal.core.subscriber import StringSubscriber
-
+from Log.logger import LoggerManager
 
 class BlowLogic:
     def __init__(self, image_encoder_queue,blow_queue):
         ecal_core.initialize(sys.argv, "Encoder Value Subscriber")
         sub = StringSubscriber("encoder_topic")
         sub.set_callback(self.callback)
+        self.logger = LoggerManager.get_logger()
         self.image_encoder_queue = image_encoder_queue
         self.blow_queue=blow_queue
         self.msg = 0
@@ -19,7 +20,7 @@ class BlowLogic:
         while True:
             if not self.image_encoder_queue.empty():
                 encoder_value = self.image_encoder_queue.get()
-                print("拿到的encoder",encoder_value)
+                self.logger.info("拿到的encoder",encoder_value)
                 while True:
                     now_encoder_value = int(self.msg)
                     if now_encoder_value - encoder_value > self.boundary:

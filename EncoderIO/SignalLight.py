@@ -1,4 +1,5 @@
 import time
+import traceback
 from threading import Thread
 from Log.logger import LoggerManager
 import sys
@@ -20,7 +21,10 @@ class SignalLight:
             self.master.set_timeout(5.0)
             self.master.set_verbose(False)
         except Exception as e:
-            self.logger.error(e)
+            error_message = str(e)  # 错误信息
+            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
+            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
+            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
 
     def ready(self):
         try:
@@ -29,7 +33,10 @@ class SignalLight:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=4, output_value=0)
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=5, output_value=0)
         except Exception as e:
-            self.logger.error(e)
+            error_message = str(e)  # 错误信息
+            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
+            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
+            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
 
     def run(self):
         try:
@@ -37,7 +44,10 @@ class SignalLight:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=3, output_value=0)
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=4, output_value=1)
         except Exception as e:
-            self.logger.error(e)
+            error_message = str(e)  # 错误信息
+            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
+            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
+            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
 
     def stop(self):
         try:
@@ -46,7 +56,10 @@ class SignalLight:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=4, output_value=0)
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=5, output_value=0)
         except Exception as e:
-            self.logger.error(e)
+            error_message = str(e)  # 错误信息
+            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
+            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
+            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
 
     def alarm(self):
         try:
@@ -56,14 +69,20 @@ class SignalLight:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=5, output_value=0)
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=2, output_value=0)
         except Exception as e:
-            self.logger.error(e)
+            error_message = str(e)  # 错误信息
+            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
+            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
+            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
 
     def close(self):
         try:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=3, output_value=0)
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=4, output_value=0)
         except Exception as e:
-            self.logger.error(e)
+            error_message = str(e)  # 错误信息
+            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
+            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
+            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
 
     def start_reading(self):
         if self.read_thread is None or not self.read_thread.is_alive():
@@ -74,13 +93,19 @@ class SignalLight:
         try:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=6, output_value=1)
         except Exception as e:
-            self.logger.error(e)
+            error_message = str(e)  # 错误信息
+            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
+            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
+            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
 
     def stop_blow(self):
         try:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=6, output_value=0)
         except Exception as e:
-            self.logger.error(e)
+            error_message = str(e)  # 错误信息
+            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
+            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
+            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
 
     def blow_long(self):
         ecal_core.initialize(sys.argv, "IO Value Publisher")
@@ -117,7 +142,6 @@ class SignalLight:
                         ti_chu = 0
                         last_red0 = 1
                         pub.send("剔除一根")
-                        print("剔除")
                         continue
                     last_red0 = 1
                     pub.send("111")
@@ -129,8 +153,10 @@ class SignalLight:
                 # print(f"{red}")
 
             except Exception as e:
-                print("error SignalLight long")
-                self.logger.error("error SignalLight long")
+                error_message = str(e)  # 错误信息
+                tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
+                filename, line, func, text = tb[-1]  # 获取最后一条错误信息
+                self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
                 break
         ecal_core.finalize()
 
@@ -181,8 +207,10 @@ class SignalLight:
                 # print(f"{red}")
 
             except Exception as e:
-                print("error SignalLight long")
-                self.logger.error("error SignalLight long")
+                error_message = str(e)  # 错误信息
+                tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
+                filename, line, func, text = tb[-1]  # 获取最后一条错误信息
+                self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
                 break
         ecal_core.finalize()
 
