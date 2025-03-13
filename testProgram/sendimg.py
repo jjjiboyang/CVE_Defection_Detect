@@ -81,5 +81,5 @@ def camera_grab_from_folder(folder_path):
 
 
 if __name__ == '__main__':
-    folder_path = "C:/Users/16146\Desktop/testimage"  # 设定本地存放图片的文件夹
+    folder_path = r"C:\Users\16146\Desktop\test"  # 设定本地存放图片的文件夹
     camera_grab_from_folder(folder_path)

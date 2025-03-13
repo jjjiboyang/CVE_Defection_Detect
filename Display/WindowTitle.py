@@ -55,7 +55,7 @@ class ctQTitleBar(QWidget):
         # 标题栏图标
         self.lblIcon = QLabel(self)
         # 标题栏标题
-        self.lblTitle = QLabel("医用透明管材机器视觉在线检测系统V3.1.1")
+        self.lblTitle = QLabel("医用透明管材机器视觉在线检测系统V3.1.3")
         self.lblTitle.setStyleSheet("font-size:14px;padding-left:5px;")
         # 标题栏弹簧
         self.spacer = QSpacerItem(TITLE_SPACER_WIDTH, TITLE_BAR_HEIGHT, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)

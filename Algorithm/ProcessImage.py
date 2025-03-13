@@ -47,7 +47,6 @@ class Detect:
     def detect(self, Image, filename):
         try:
             FOLDER = f"./All_Images/{(datetime.now().strftime('%Y-%m-%d'))}"
-            result = ""
             RectanglePoints = []
             ImageScaled = ha.scale_image(Image, 1.5, -50)
             ImageMedian = ha.median_image(ImageScaled, 'circle', 3, 'mirrored')
@@ -328,10 +327,7 @@ class Detect:
                         # ha.write_image(ImageSave, 'png', 0, output_path)
                         sum4 -= 1
 
-            if result == "":
-                return "0"
-
-            return result, RectanglePoints
+            return "0", RectanglePoints
 
         except Exception as e:
             error_message = str(e)  # 错误信息
@@ -392,8 +388,9 @@ class ProcessImage:
                         last_cam2_encoder_value = image_msg.encoder_value
                         continue
                     defect_type_num, Points = self.Detect.detect(halcon_image, image_msg.encoder_value)
-                    self.logger.info(f"Defect Type: {defect_type_num},Area:{Points}")
+
                     if defect_type_num != "0":
+                        self.logger.info(f"Defect Type: {defect_type_num},Area:{Points}")
                         if self.cam_num == '1':
                             self.image_encoder_queue.put(last_cam1_encoder_value)
                         elif self.cam_num == '2':
