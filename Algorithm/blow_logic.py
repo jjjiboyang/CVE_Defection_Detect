@@ -26,15 +26,13 @@ class BlowLogic:
                     while True:
                         now_encoder_value = int(self.msg)
                         if now_encoder_value - encoder_value > self.boundary:
-                            self.logger.info(f"编码器差值：{now_encoder_value}-{encoder_value}={now_encoder_value-encoder_value}")
+                            # self.logger.info(f"编码器差值：{now_encoder_value}-{encoder_value}={now_encoder_value-encoder_value}")
                             self.blow_queue.put("1")
-                            # print(time.time(),"--send")
                             break
                         if now_encoder_value < encoder_value:
                             if now_encoder_value + (6553565535 - encoder_value) > self.boundary:
                                 # print(encoder_value - now_encoder_value)
                                 self.blow_queue.put("1")
-                                # print(time.time(), "--send")
                                 break
             except Exception as e:
                 error_message = str(e)  # 错误信息

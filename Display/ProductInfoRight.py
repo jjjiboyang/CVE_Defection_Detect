@@ -5,7 +5,6 @@ import ecal.core.core as ecal_core
 from ecal.core.subscriber import StringSubscriber
 import sys
 import CamGrab.datatype_pb2 as datatype_pb2
-from Log.logger import LoggerManager
 
 sys.path.append('data_json.py')
 
@@ -15,7 +14,6 @@ class DefectNumber(QThread):
 
     def __init__(self):
         super().__init__()
-        self.logger = LoggerManager.get_logger()
 
     def run(self):
         ecal_core.initialize(sys.argv, "Processed Image Subscriber")
@@ -35,7 +33,6 @@ class ProductNumber(QThread):
 
     def __init__(self):
         super().__init__()
-        self.logger = LoggerManager.get_logger()
 
     def run(self):
         ecal_core.initialize(sys.argv, "IO Value Subscriber")

@@ -9,9 +9,9 @@ from Log.logger import LoggerManager
 
 class PubSignal:
     def __init__(self):
-        self.logger = LoggerManager.get_logger()
+        self.logger = LoggerManager.get_logger("Encoder_logger")
         try:
-            self.master_encoder = rtu.RtuMaster(serial.Serial(port="com8", baudrate=115200, parity="N"))
+            self.master_encoder = rtu.RtuMaster(serial.Serial(port="com8", baudrate=115200, parity="N",bytesize=8,stopbits=1))
             self.master_encoder.set_timeout(5.0)
             self.master_encoder.set_verbose(False)
         except Exception as e:

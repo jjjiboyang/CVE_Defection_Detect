@@ -380,7 +380,7 @@ class ProcessImage:
                     defect_type_num, Points = self.Detect.detect(halcon_image, image_msg.encoder_value)
 
                     if defect_type_num != "0":
-                        self.logger.info(f"Defect Type: {defect_type_num},Area:{Points}")
+                        # self.logger.info(f"Defect Type: {defect_type_num},Area:{Points}")
                         if self.cam_num == '1':
                             self.image_encoder_queue.put(last_cam1_encoder_value)
                         elif self.cam_num == '2':

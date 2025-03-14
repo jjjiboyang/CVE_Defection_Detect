@@ -4,17 +4,17 @@ from datetime import datetime
 
 
 class LoggerManager:
-    _logger = None  # 静态变量
+    _loggers = {}  # 存储多个 Logger 实例
 
     @staticmethod
-    def get_logger():
-        """ 获取全局 logger（单例模式） """
-        if LoggerManager._logger is None:
+    def get_logger(name="global_logger"):
+        """ 获取指定名称的 logger（单例模式，避免重复创建） """
+        if name not in LoggerManager._loggers:
             log_dir = "./log"
             os.makedirs(log_dir, exist_ok=True)
             log_path = os.path.join(log_dir, f"{datetime.now().strftime('%Y-%m-%d')}.txt")
 
-            logger = logging.getLogger("global_logger")
+            logger = logging.getLogger(name)
             logger.setLevel(logging.DEBUG)
 
             # 避免重复添加 Handler
@@ -29,6 +29,6 @@ class LoggerManager:
                 logger.addHandler(file_handler)
                 logger.addHandler(console_handler)
 
-            LoggerManager._logger = logger
+            LoggerManager._loggers[name] = logger
 
-        return LoggerManager._logger
+        return LoggerManager._loggers[name]

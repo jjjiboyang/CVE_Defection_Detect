@@ -12,7 +12,7 @@ import ecal.core.core as ecal_core
 
 class SignalLight:
     def __init__(self, light_queue, blow_queue):
-        self.logger = LoggerManager.get_logger()
+        self.logger = LoggerManager.get_logger("IO_logger")
         self.read_thread = None
         self.light_queue = light_queue
         self.blow_queue = blow_queue
