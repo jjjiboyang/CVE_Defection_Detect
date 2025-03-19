@@ -104,17 +104,19 @@ class ImageListView(QGraphicsView):
         self.viewport().update()
 
     def load_images_from_folder(self, folder_path):
-        """从指定文件夹加载图片并按照时间排序."""
+        """从指定文件夹加载图片并按照时间排序（从旧到新），读取最新的20张图片."""
         image_files = sorted(
-            [os.path.join(folder_path, f) for f in os.listdir(folder_path) if
-             f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff'))],
-            key=lambda x: os.path.getmtime(x), reverse=False)
+            [os.path.join(folder_path, f) for f in os.listdir(folder_path)
+             if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff'))],
+            key=lambda x: os.path.getmtime(x),
+            reverse=False  # 从旧到新
+        )[-20:]  # 取最后20张，也就是最新的20张
 
         for image_file in image_files:
             img = cv2.imread(image_file, cv2.IMREAD_COLOR)
             if img is None:
                 print(f"Error: Failed to load image {image_file}")
-            if img is not None:
+            else:
                 self.add_image(img, image_file)
 
     def add_image(self, img, filename):

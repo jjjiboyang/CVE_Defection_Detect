@@ -8,14 +8,13 @@ import ecal.core.core as ecal_core
 import numpy as np
 import CamGrab.datatype_pb2 as datatype_pb2
 import lmdb
-from Log.logger import LoggerManager
 
 class SaveImages:
-    def __init__(self, save_choice, message_queue):
+    def __init__(self, save_choice, message_queue,log_queue):
         self.save_choice = save_choice
         self.message_queue = message_queue
         self.images_queue = queue.Queue()
-        self.logger = LoggerManager.get_logger()
+        self.log_queue = log_queue
 
     def callback(self, topic_name, msg, time):
         received_message = datatype_pb2.ImageParameters()
@@ -49,10 +48,12 @@ class SaveImages:
                     self.save_images_database(img_msg.data, img_msg.timestamp)
 
             except Exception as e:
-                error_message = str(e)  # 错误信息
-                tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-                filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-                self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+                error_message = str(e)
+                tb = traceback.extract_tb(e.__traceback__)
+                filename, line, func, text = tb[-1]
+                detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+                # 把错误信息+完整日志内容放进队列
+                self.log_queue.put((error_message, detail_message))
 
     def save_images_database(self, image_msg_data, timestamp):
         # map_size定义最大储存容量，单位是kb，以下定义10G容量
@@ -76,6 +77,6 @@ class SaveImages:
         cv2.imwrite(image_filename, img)
 
 
-def SaveImage_ecal(save_choice, message_queue):
-    Save = SaveImages(save_choice, message_queue)
+def SaveImage_ecal(save_choice, message_queue,log_queue):
+    Save = SaveImages(save_choice, message_queue,log_queue)
     Save.save()

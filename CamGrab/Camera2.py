@@ -8,15 +8,14 @@ from CamGrab.CameraParams_header import *
 from CamGrab.MvCameraControl_class import *
 from CamGrab.PixelType_header import *
 from CamGrab.MvCameraControl_class import MvCamera
-from Log.logger import LoggerManager
 
 
 class Camera:
-    def __init__(self):
+    def __init__(self,log_queue):
         self.device_list = None
         self.cam = None
         self.encoder_value = [0]
-        self.logger = LoggerManager.get_logger()
+        self.log_queue = log_queue
 
         ecal_core.initialize(sys.argv, "Encoder Value Subscriber")
         sub = StringSubscriber("encoder_topic")
@@ -49,10 +48,10 @@ class Camera:
         # ch:打开设备 | en:Open device
         ret = self.cam.MV_CC_OpenDevice(MV_ACCESS_Exclusive, 0)
         if ret != 0:
-            self.logger.error("open device fail! ret[0x%x]" % ret)
+            self.log_queue.put(("error: open device fail! ret[0x%x]" % ret,"error: open device fail! ret[0x%x]" % ret))
             print("open device fail! ret[0x%x]" % ret)
         else:
-            self.logger.info("open device successfully 2")
+            self.log_queue.put(("open device successfully 2", "open device successfully 2"))
             print("open device successfully 2")
 
         # ch:探测网络最佳包大小(只对GigE相机有效) | en:Detection network optimal package size(It only works for the GigE self.camera)
@@ -111,8 +110,8 @@ class Camera:
                 pass
 
 
-def camera_grab_2():
-    cam = Camera()
+def camera_grab_2(log_queue):
+    cam = Camera(log_queue)
     cam.OpenDevice()
     cam.StartGrab()
 

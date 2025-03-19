@@ -3,7 +3,8 @@ import time
 from datetime import datetime
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QSizePolicy, QButtonGroup, QSpacerItem
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QSizePolicy, QButtonGroup, QSpacerItem, \
+    QGraphicsScene
 from Display.GUI import Ui_MainWindow
 from Display.GraphicsView_One import CustomGraphicsView
 from Display.GraphicsView_Two import ImageListView
@@ -27,10 +28,9 @@ from Algorithm.blow_logic import blow
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self,log_queue):
         super().__init__()
-        # 日志
-        self.logger = LoggerManager.get_logger()
+        self.log_queue = log_queue
         self.message_queue = multiprocessing.Queue()
         self.light_queue = multiprocessing.Queue()
         self.blow_queue = multiprocessing.Queue()
@@ -40,10 +40,10 @@ class MainWindow(QMainWindow):
         # 启动发送编码器和IO信号的进程
         self.light_queue.put("ready")
         try:
-            self.process_signal = Process(target=run_SignalGrab)
+            self.process_signal = Process(target=run_SignalGrab,args=(self.log_queue,))
             self.process_signal.start()
         except Exception as e:
-            self.logger.error(e)
+            self.log_queue.put(str(e))
 
         # 初始化
         self.ui = Ui_MainWindow()
@@ -81,7 +81,7 @@ class MainWindow(QMainWindow):
         self.ui.menubar.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
 
         '''设置Menu和Action'''
-        self.menu_action = MenuAction(self.ui,self.logger)
+        self.menu_action = MenuAction(self.ui,self.log_queue)
 
         '''字体大小'''
         self.ui.label_1.setStyleSheet("font-size: 20px;font-weight: bold;color:White;")
@@ -145,7 +145,7 @@ class MainWindow(QMainWindow):
         self.ecal_receiver_thread.start()
 
         '''CheckBox'''
-        self.cBox = CheckBox(self.ui, self.light_queue,self.blow_queue)
+        self.cBox = CheckBox(self.ui, self.light_queue,self.blow_queue,self.log_queue)
         self.ui.checkBox_5.stateChanged.connect(self.cBox.on_checkbox5_changed)
         self.ui.checkBox_6.stateChanged.connect(self.cBox.on_checkbox6_changed)
         self.ui.checkBox_4.stateChanged.connect(self.save_image_choice)
@@ -201,16 +201,16 @@ class MainWindow(QMainWindow):
             self.ui.Stop_Button.setEnabled(True)
             self.ecal_receiver_thread.start_receive()
             self.process_image = Process(target=run_ImageProcessing,
-                                         args=(self.save_choice, self.image_encoder_queue,self.defect_types))
+                                         args=(self.save_choice, self.image_encoder_queue,self.defect_types,self.log_queue))
             self.process_image.start()
-            self.save_image = Process(target=SaveImage_ecal, args=(self.save_choice, self.message_queue))
+            self.save_image = Process(target=SaveImage_ecal, args=(self.save_choice, self.message_queue,self.log_queue))
             self.save_image.start()
-            self.blow_logic = Process(target=blow, args=(self.image_encoder_queue,self.blow_queue))
+            self.blow_logic = Process(target=blow, args=(self.image_encoder_queue,self.blow_queue,self.log_queue))
             self.blow_logic.start()
             self.status = True
             self.light_queue.put("run")
             self.status_text.show("开始接收图片")
-            self.logger.info("开始接收图片")
+            self.log_queue.put(("开始接收图片","开始接收图片"))
 
     def update_graphics_view_1(self, img):
         self.ui.graphicsView_1.set_image(img)
@@ -225,7 +225,6 @@ class MainWindow(QMainWindow):
             # 设置按钮样式
             self.ui.Start_Button.setEnabled(True)
             self.ui.Stop_Button.setEnabled(False)
-
             self.ecal_receiver_thread.stop_receive()
             self.process_image.terminate()
             self.save_image.terminate()
@@ -233,7 +232,12 @@ class MainWindow(QMainWindow):
             self.status = False
             self.light_queue.put("stop")
             self.status_text.show("停止接收图片")
-            self.logger.info("停止接收图片")
+            self.log_queue.put(("停止接收图片","停止接收图片"))
+
+            # 清空实时显示
+            scene1 = QGraphicsScene()
+            self.ui.graphicsView_1.setScene(scene1)
+            self.ui.graphicsView_2.setScene(scene1)
 
     def closeEvent(self, event):
         self.light_queue.put("close")
@@ -245,7 +249,7 @@ class MainWindow(QMainWindow):
         self.cBox.blow_signal.terminate()
         # 关闭采集图像的进程
         self.ui.actionClose_Camera.trigger()
-        self.logger.info("关闭窗口")
+        self.log_queue.put(("关闭窗口","关闭窗口"))
         event.accept()  # 接受关闭事件
         QApplication.quit()  # 结束主事件循环并退出程序
 

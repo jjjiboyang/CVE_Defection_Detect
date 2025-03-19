@@ -8,11 +8,11 @@ from ecal.core.subscriber import StringSubscriber
 from Log.logger import LoggerManager
 
 class BlowLogic:
-    def __init__(self, image_encoder_queue,blow_queue):
+    def __init__(self, image_encoder_queue,blow_queue,log_queue):
         ecal_core.initialize(sys.argv, "Encoder Value Subscriber")
         sub = StringSubscriber("encoder_topic")
         sub.set_callback(self.callback)
-        self.logger = LoggerManager.get_logger()
+        self.log_queue = log_queue
         self.image_encoder_queue = image_encoder_queue
         self.blow_queue=blow_queue
         self.msg = 0
@@ -35,15 +35,17 @@ class BlowLogic:
                                 self.blow_queue.put("1")
                                 break
             except Exception as e:
-                error_message = str(e)  # 错误信息
-                tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-                filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-                self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+                error_message = str(e)
+                tb = traceback.extract_tb(e.__traceback__)
+                filename, line, func, text = tb[-1]
+                detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+                # 把错误信息+完整日志内容放进队列
+                self.log_queue.put((error_message, detail_message))
 
     def callback(self, topic_name, msg, time):
         self.msg = msg
 
 
-def blow(image_encoder_queue,blow_queue):
-    blow_logic = BlowLogic(image_encoder_queue,blow_queue)
+def blow(image_encoder_queue,blow_queue,log_queue):
+    blow_logic = BlowLogic(image_encoder_queue,blow_queue,log_queue)
     blow_logic.detect_blow()

@@ -1,7 +1,6 @@
 import time
 import traceback
 from threading import Thread
-from Log.logger import LoggerManager
 import sys
 import modbus_tk.defines as csd
 import modbus_tk.modbus_rtu as rtu
@@ -11,21 +10,23 @@ import ecal.core.core as ecal_core
 
 
 class SignalLight:
-    def __init__(self, light_queue, blow_queue):
-        self.logger = LoggerManager.get_logger("IO_logger")
+    def __init__(self, light_queue, blow_queue,log_queue):
+        self.log_queue = log_queue
         self.read_thread = None
         self.light_queue = light_queue
         self.blow_queue = blow_queue
 
         try:
-            self.master = rtu.RtuMaster(serial.Serial(port="com7", baudrate=115200, parity="N",bytesize=8,stopbits=1))
+            self.master = rtu.RtuMaster(serial.Serial(port="com7", baudrate=57600, parity="N",bytesize=8,stopbits=1))
             self.master.set_timeout(5.0)
             self.master.set_verbose(False)
         except Exception as e:
-            error_message = str(e)  # 错误信息
-            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+            error_message = str(e)
+            tb = traceback.extract_tb(e.__traceback__)
+            filename, line, func, text = tb[-1]
+            detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+            # 把错误信息+完整日志内容放进队列
+            self.log_queue.put((error_message, detail_message))
 
     def ready(self):
         try:
@@ -34,10 +35,12 @@ class SignalLight:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=4, output_value=0)
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=5, output_value=0)
         except Exception as e:
-            error_message = str(e)  # 错误信息
-            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+            error_message = str(e)
+            tb = traceback.extract_tb(e.__traceback__)
+            filename, line, func, text = tb[-1]
+            detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+            # 把错误信息+完整日志内容放进队列
+            self.log_queue.put((error_message, detail_message))
 
     def run(self):
         try:
@@ -45,10 +48,12 @@ class SignalLight:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=3, output_value=0)
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=4, output_value=1)
         except Exception as e:
-            error_message = str(e)  # 错误信息
-            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+            error_message = str(e)
+            tb = traceback.extract_tb(e.__traceback__)
+            filename, line, func, text = tb[-1]
+            detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+            # 把错误信息+完整日志内容放进队列
+            self.log_queue.put((error_message, detail_message))
 
     def stop(self):
         try:
@@ -57,10 +62,12 @@ class SignalLight:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=4, output_value=0)
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=5, output_value=0)
         except Exception as e:
-            error_message = str(e)  # 错误信息
-            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+            error_message = str(e)
+            tb = traceback.extract_tb(e.__traceback__)
+            filename, line, func, text = tb[-1]
+            detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+            # 把错误信息+完整日志内容放进队列
+            self.log_queue.put((error_message, detail_message))
 
     def alarm(self):
         try:
@@ -70,38 +77,46 @@ class SignalLight:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=5, output_value=0)
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=2, output_value=0)
         except Exception as e:
-            error_message = str(e)  # 错误信息
-            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+            error_message = str(e)
+            tb = traceback.extract_tb(e.__traceback__)
+            filename, line, func, text = tb[-1]
+            detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+            # 把错误信息+完整日志内容放进队列
+            self.log_queue.put((error_message, detail_message))
 
     def close(self):
         try:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=3, output_value=0)
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=4, output_value=0)
         except Exception as e:
-            error_message = str(e)  # 错误信息
-            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+            error_message = str(e)
+            tb = traceback.extract_tb(e.__traceback__)
+            filename, line, func, text = tb[-1]
+            detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+            # 把错误信息+完整日志内容放进队列
+            self.log_queue.put((error_message, detail_message))
 
     def start_blow(self):
         try:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=6, output_value=1)
         except Exception as e:
-            error_message = str(e)  # 错误信息
-            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+            error_message = str(e)
+            tb = traceback.extract_tb(e.__traceback__)
+            filename, line, func, text = tb[-1]
+            detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+            # 把错误信息+完整日志内容放进队列
+            self.log_queue.put((error_message, detail_message))
 
     def stop_blow(self):
         try:
             self.master.execute(1, csd.WRITE_SINGLE_COIL, starting_address=6, output_value=0)
         except Exception as e:
-            error_message = str(e)  # 错误信息
-            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+            error_message = str(e)
+            tb = traceback.extract_tb(e.__traceback__)
+            filename, line, func, text = tb[-1]
+            detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+            # 把错误信息+完整日志内容放进队列
+            self.log_queue.put((error_message, detail_message))
 
     def blow_long(self):
         ecal_core.initialize(sys.argv, "IO Value Publisher")
@@ -149,10 +164,12 @@ class SignalLight:
                 # print(f"{red}")
 
             except Exception as e:
-                error_message = str(e)  # 错误信息
-                tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-                filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-                self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+                error_message = str(e)
+                tb = traceback.extract_tb(e.__traceback__)
+                filename, line, func, text = tb[-1]
+                detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+                # 把错误信息+完整日志内容放进队列
+                self.log_queue.put((error_message, detail_message))
                 # 让循环继续运行，而不是直接退出
                 continue
 
@@ -205,21 +222,23 @@ class SignalLight:
                 # print(f"{red}")
 
             except Exception as e:
-                error_message = str(e)  # 错误信息
-                tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-                filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-                self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+                error_message = str(e)
+                tb = traceback.extract_tb(e.__traceback__)
+                filename, line, func, text = tb[-1]
+                detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+                # 把错误信息+完整日志内容放进队列
+                self.log_queue.put((error_message, detail_message))
                 # 让循环继续运行，而不是直接退出
                 continue
 
         ecal_core.finalize()
 
 
-def run_BlowLong(light_queue, blow_queue):
-    signal_knife = SignalLight(light_queue, blow_queue)
+def run_BlowLong(light_queue, blow_queue,log_queue):
+    signal_knife = SignalLight(light_queue, blow_queue,log_queue)
     signal_knife.blow_long()
 
 
-def run_BlowShort(light_queue, blow_queue):
-    signal_knife = SignalLight(light_queue, blow_queue)
+def run_BlowShort(light_queue, blow_queue,log_queue):
+    signal_knife = SignalLight(light_queue, blow_queue,log_queue)
     signal_knife.blow_short()

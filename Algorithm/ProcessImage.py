@@ -9,8 +9,6 @@ import ecal.core.core as ecal_core
 import sys
 import halcon as ha
 import time
-from Log.logger import LoggerManager
-
 
 # 资源文件目录访问
 def source_path(relative_path):
@@ -23,7 +21,7 @@ def source_path(relative_path):
 
 
 class Detect:
-    def __init__(self, defect_types):
+    def __init__(self, defect_types,log_queue):
         model1 = str(source_path(os.path.join("res", "model_water.hdl")))
         model2 = str(source_path(os.path.join("res", "model_black.hdl")))
 
@@ -42,7 +40,7 @@ class Detect:
         self.defect_type_3 = defect_types[2]
         self.defect_type_4 = defect_types[3]
 
-        self.logger = LoggerManager.get_logger()
+        self.log_queue = log_queue
 
     def detect(self, Image, filename):
         try:
@@ -325,20 +323,22 @@ class Detect:
             return "0", RectanglePoints
 
         except Exception as e:
-            error_message = str(e)  # 错误信息
-            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+            error_message = str(e)
+            tb = traceback.extract_tb(e.__traceback__)
+            filename, line, func, text = tb[-1]
+            detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+            # 把错误信息+完整日志内容放进队列
+            self.log_queue.put((error_message, detail_message))
 
 
 class ProcessImage:
-    def __init__(self, save_choice, image_encoder_queue, defect_types):
+    def __init__(self, save_choice, image_encoder_queue, defect_types,log_queue):
         self.img_queue = queue.Queue()
         self.save_choice = save_choice
         self.image_encoder_queue = image_encoder_queue
         self.cam_num = 0
-        self.Detect = Detect(defect_types)
-        self.logger = LoggerManager.get_logger()
+        self.Detect = Detect(defect_types,log_queue)
+        self.log_queue = log_queue
         ecal_core.initialize(sys.argv, "Python Protobuf Subscriber")
         sub_1 = ecal_core.subscriber('defect_detection_topic_1')
         sub_2 = ecal_core.subscriber('defect_detection_topic_2')
@@ -415,12 +415,14 @@ class ProcessImage:
                     # print("total:", float(end_t - start_t) * 1000.0, "ms")
 
         except Exception as e:
-            error_message = str(e)  # 错误信息
-            tb = traceback.extract_tb(e.__traceback__)  # 获取 traceback 详细信息
-            filename, line, func, text = tb[-1]  # 获取最后一条错误信息
-            self.logger.error(f"文件: {filename},行号: {line},函数: {func},代码: {text},错误信息: {error_message}")
+            error_message = str(e)
+            tb = traceback.extract_tb(e.__traceback__)
+            filename, line, func, text = tb[-1]
+            detail_message = f"文件: {filename}, 行号: {line}, 函数: {func}, 代码: {text}, 错误信息: {error_message}"
+            # 把错误信息+完整日志内容放进队列
+            self.log_queue.put((error_message, detail_message))
 
 
-def run_ImageProcessing(save_choice, image_encoder_queue, defect_types):
-    process = ProcessImage(save_choice, image_encoder_queue, defect_types)
+def run_ImageProcessing(save_choice, image_encoder_queue, defect_types,log_queue):
+    process = ProcessImage(save_choice, image_encoder_queue, defect_types,log_queue)
     process.detect_defects()

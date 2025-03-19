@@ -1,6 +1,7 @@
 """Main Procedure"""
 
 import multiprocessing
+from multiprocessing import Process
 import os
 import sys
 import shutil
@@ -8,9 +9,23 @@ import time
 from datetime import datetime
 from PySide6.QtWidgets import QApplication
 from Display.main_window import MainWindow
-from Log.logger import LoggerManager
 from qt_material import apply_stylesheet
 from Display.loading_screen import LoadingScreen
+from Log.logger import LoggerManager
+
+
+def log_listener(log_queue):
+    logger = LoggerManager.get_logger()
+    logged_errors = set()  # 用于判重
+
+    while True:
+        data = log_queue.get()
+        if data == "STOP":
+            break
+        error_message, detail_message = data
+        if error_message not in logged_errors:
+            logged_errors.add(error_message)
+            logger.error(detail_message)  # 只写一次完整日志
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()
@@ -26,6 +41,9 @@ if __name__ == "__main__":
 
     # 创建保存日志的目录
     os.makedirs("./log", exist_ok=True)
+    log_queue = multiprocessing.Queue()
+    listener = Process(target=log_listener, args=(log_queue,),daemon=True)
+    listener.start()
 
     # 创建以当前日期命名的文件夹
     FOLDER = f"./All_Images/{(datetime.now().strftime('%Y-%m-%d'))}"
@@ -49,7 +67,7 @@ if __name__ == "__main__":
     loading_screen.exec()  # 运行加载界面（会阻塞，直到加载完成）
 
     # 继续加载主界面
-    window = MainWindow()
+    window = MainWindow(log_queue)
 
     extra = {
 
